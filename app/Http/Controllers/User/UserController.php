@@ -80,6 +80,41 @@ class UserController extends Controller
         return redirect()->intended('/');
     }
     
+    public function adminSignInPage() 
+    {
+        $datas = array(
+            'title' => 'Login'
+        );
+
+        return view('Page/Admin/Login')->with($datas);          
+    }
+    
+    public function adminSignInProcess(Request $request)
+    {
+        $inputs = $request->all();
+
+        $rules = [
+            'email' => 'required|max:150|email',
+            'password' => 'required|min:6',
+        ];
+        
+        $validator = Validator::make($inputs, $rules);
+        
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }        
+ 
+        $userClass = User::instance();
+        $result = $userClass->adminLogIn($inputs);
+
+        if ($result !== true) {
+            return redirect()->back()->withErrors($result)->withInput();
+        }
+        
+        // To Home page
+        return redirect('/admin');        
+    }
+    
     public function signOut() 
     {
         $userClass = User::instance();
