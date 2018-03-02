@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('type', 1)->default('G')->comment('G 普遍會員、A 管理員');
             $table->string('email', 150)->unique();
             $table->string('password', 60);
+            $table->string('address', 200);
             $table->rememberToken();
             $table->timestamps();
         });

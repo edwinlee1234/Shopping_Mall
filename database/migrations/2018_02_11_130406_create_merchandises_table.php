@@ -16,13 +16,14 @@ class CreateMerchandisesTable extends Migration
         Schema::create('merchandises', function (Blueprint $table) {
             $table->increments('id');
             $table->string('status', 1)->default('C')->comment('C 建立中、S 可販售')->index();
-            $table->string('name', 80)->nullable();
-            $table->string('name_en', 80)->nullable();
-            $table->text('introduction');
-            $table->text('introduction_en');
-            $table->string('photo', 50)->nullable();
+            $table->string('name', 120)->nullable();
+            $table->string('introduction', 1200);
+            $table->string('brand', 30);
+            $table->integer('type', 2);
+            $table->string('photos', 300)->nullable();
             $table->integer('price')->default(0);
             $table->integer('remain_count')->default(0);
+            $table->string('extra_info', 600)->nullable();
             $table->timestamps();
         });
     }

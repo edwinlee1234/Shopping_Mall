@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrdersTable extends Migration
+class CreateCataloguesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('catalogues', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('total_price')->nullable();
-            $table->string('pay_type', 3)->nullable();
-            $table->string('status', 1)->default('N')->comment('N 沒付款、Y 己付款、X 取消訂單');            
+            $table->string('type', 20);
+            $table->string('parents', 2);
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('catalogues');
     }
 }
