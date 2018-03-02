@@ -45,6 +45,18 @@ Route::group(['prefix' => 'merchandise'], function(){
         Route::get('/manage', 'Merchandise\MerchandiseController@merchandiseManageListPage');
         //新增產品
         Route::post('/create', 'Merchandise\MerchandiseController@merchandiseCreateProcess'); 
+        //取得商品目錄清單頁
+        Route::get('/cataloguesListPage', 'Merchandise\MerchandiseController@merchandiseCataloguesListPage');
+        
+        //API
+        Route::group(['prefix' => 'api'], function(){
+            Route::get('/getCataloguesListDatas', 'Merchandise\MerchandiseController@getCataloguesListDatas');
+            Route::get('/getCataloguesListDatasGroup', 'Merchandise\MerchandiseController@getCataloguesListDatasGroup');
+            Route::post('/addMainType', 'Merchandise\MerchandiseController@addMainType');
+            Route::post('/addSubType', 'Merchandise\MerchandiseController@addSubType');
+            Route::delete('/deleteType/{id}', 'Merchandise\MerchandiseController@deleteType');
+            Route::put('/changeTypeName', 'Merchandise\MerchandiseController@changeTypeName');
+        });
     });
     
     Route::group(['prefix' => '{merchandise_id}'], function(){
