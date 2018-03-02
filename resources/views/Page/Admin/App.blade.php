@@ -6,8 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/css/app.css" type="text/css" />
-    <script type="text/javascript" src="/js/app.js"></script>
-    <link rel="stylesheet" href="{{ URL::asset('/css/sideBar.css') }}" type="text/css" />
+    <link rel="stylesheet" href="/css/sidebar.css" type="text/css" />
     <title>@yield('title')</title>
 </head>
 @section('style')
@@ -16,10 +15,19 @@
         font-family: 微軟正黑體;
     }
     
-    .menu, .content {
-        vertical-align: top;
-        display: inline-block;
+    .content {
+        margin-left: 250px;
     }
+    
+    html, body{
+        padding: 0px;
+        margin: 0px;
+    }
+    
+    .container-fluid{
+        padding: 0px;
+    }
+    
 </style>
 @show
 <body>
@@ -33,6 +41,7 @@
     </div>
 </body>
 @section('script')
-
+<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+<script type="text/javascript" src="/js/app.js"></script>
 @show
 </html>

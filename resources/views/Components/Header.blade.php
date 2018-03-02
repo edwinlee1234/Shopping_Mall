@@ -1,32 +1,34 @@
 <div id="navBar">
-    <div class="navbar navbar-light bg-light justify-content-between">
-        <a class="navbar-brand" href="/">Logo</a>
-        <ul class="nav justify-content-end">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-                Hello!  
-                
-                @if(session()->has('user_info')) 
-                    {{ session()->get('user_info')['name'] }}
-                @else
-                    Guest
-                @endif    
-            </a>
-          </li>
-          <li class="nav-item">
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+            Hello!  
+            
             @if(session()->has('user_info')) 
-                <a class="nav-link" href="#">Center</a>
+                {{ session()->get('user_info')['name'] }}
             @else
-                <a class="nav-link" href="/user/auth/sign-up">Register</a>
-            @endif
-          </li>
-          <li class="nav-item">
-            @if(session()->has('user_info')) 
-                <a class="nav-link" href="/user/auth/sign-out">LogOut</a>
-            @else
-                <a class="nav-link" href="/user/auth/sign-in">LogIn</a>
-            @endif
-          </li>
-        </ul>        
-    </div>
+                Guest
+            @endif    
+        </a>
+      </li>
+      <li class="nav-item">
+        @if(session()->has('user_info')) 
+            <a class="nav-link" href="#">{{ trans('shop.auth.center') }}</a>
+        @else
+            <a class="nav-link" href="/user/auth/sign-up">{{ trans('shop.auth.sign-up') }}</a>
+        @endif
+      </li>
+      <li class="nav-item">
+        @if(session()->has('user_info')) 
+            <a class="nav-link" href="/user/auth/sign-out">{{ trans('shop.auth.sign-out') }}</a>
+        @else
+            <a class="nav-link" href="/user/auth/sign-in">{{ trans('shop.auth.sign-in') }}</a>
+        @endif
+      </li>
+      <li class="nav-item">
+        @if(session()->has('user_info')) 
+            <a class="nav-link" href="#">{{ trans('shop.main.cart') }}</a>
+        @endif
+      </li>
+    </ul>        
 </div>

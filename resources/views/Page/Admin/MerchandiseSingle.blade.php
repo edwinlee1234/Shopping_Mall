@@ -5,20 +5,38 @@
 @section('style')
 @parent
 <style>
+  * {
+      /*border: solid 1px;*/
+  }
   #MerchandiseSingleForm {
       width: 800px;
+      padding-left: 20px;
+      padding-top: 10px;
   }
+  
+  #MerchandiseSingleForm .submitBtn{
+      margin-top: 15px;
+      margin-bottom: 20px;
+  }
+  
+  #MerchandiseSingleForm .degreesBtn {
+      padding-top: 35px;
+  }
+  
 </style>
 @endsection
 
 @section('content')
 
-<br>
 @include('Components/Error')
 @include('Components/Success')
 
 <div id="MerchandiseSingleForm">
-    
+    <div class="row">
+        <div class="col">
+            <h1>商品新增</h1>
+        </div>
+    </div>
     <div id="ontherOption">
         <label>其他選項:</label>
         <div class="form-check form-check-inline">
@@ -51,11 +69,11 @@
         </div>
         <div class="form-group">
             <label for="price">價格</label>
-            <input type="text" class="form-control" name='price' placeholder="價格" value="{{ old('price') }}">
+            <input type="number" class="form-control" name='price' placeholder="價格" value="{{ old('price') }}">
         </div>            
         <div class="form-group">
             <label for="remain_count">存貨</label>
-            <input type="text" class="form-control" name='remain_count' placeholder="存貨" value="{{ old('remain_count') }}">
+            <input type="number" class="form-control" name='remain_count' placeholder="存貨" value="{{ old('remain_count') }}">
         </div>            
         <div class="form-group">
             <label for="status">商品狀態</label>
@@ -72,23 +90,37 @@
                 @endif>可販售</option>
             </select>
         </div>
-
-        <div v-show="showDegree" class="form-group">
-            <label for="status">度數</label>
-            <select>
-                <option v-for='option in degreesOption'>
-                    @{{ option }}
-                </option>
-            </select>
-            <input type="number" class="form-control" id='degreesOptionInput' value="">
-            <button @click='addDegreesOption()' class="btn btn-info btn-sm" type='button'>Add</button>
-            <button @click='resetDegreesOption()' class="btn btn-info btn-sm" type='button'>Reset</button>
+        <div class="form-group">
+            <label for="type">商品類型</label>
+            <select class="form-control" id="catalogues" name='type'>
+                <option v-for='listGroup in cataloguesGroup' :value="listGroup['id']">@{{ listGroup['type'] }}</option>
+            </select>            
+        </div> 
+        <div v-show="showDegree">
+            <div class="form-group">
+                <label>度數</label>
+                <select class="custom-select custom-select-sm">
+                    <option v-for='option in degreesOption'>
+                        @{{ option }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="number">新增度數</label>
+                    <input type="number" class="form-control" id='degreesOptionInput' value="">
+                </div>
+                <div class="form-group col-md-6 degreesBtn">
+                    <button @click='addDegreesOption()' class="btn btn-info btn-sm" type='button'>Add</button>
+                    <button @click='resetDegreesOption()' class="btn btn-info btn-sm" type='button'>Reset</button>
+                </div> 
+            </div>
             <input type="hidden" name="degreesOption" :value="degreesOption">
             <input type="hidden" name="oldOption" value="{{ old('degreesOption') }}">
         </div>
         <div class="form-group">
-            <label for="photo">圖片</label>
-            {{ Form::file('image', ['name' => 'photo', 'multiple' => true, 'class' => 'form-control-file']) }}
+            <label for="photos">圖片</label>
+            {{ Form::file('image', ['name' => 'photos[]', 'multiple' => true, 'class' => 'form-control-file']) }}
         </div>
         <div class="form-group">
             <label for="intro_tw">介紹 (繁中)</label>
@@ -102,8 +134,7 @@
             <label for="intro_en">介紹 (英文)</label>
             <textarea class="form-control" rows="5" placeholder="英文介紹" name="intro_en">{{ old('intro_en') }}</textarea>
         </div>
-        <br>
-        <button class="btn btn-primary" type="submit">提交</button>
+        <button class="btn btn-primary submitBtn" type="submit">提交</button>
     {{ Form::close() }}  
 </div>
 
@@ -116,17 +147,35 @@
         el: '#MerchandiseSingleForm',
         
         mounted() {
+            let self = this;
             let oldOptionVal = $('input[name=oldOption]').val();
 
             if (oldOptionVal !== "") {
                 this.degreesOption = oldOptionVal.split(',');
             }
+            
+            axios.get('/merchandise/api/getCataloguesListDatasGroup')
+            .then(function (response) {
+                console.log(response);
+                if (response.data.result !== true) {
+                    console.log(response.data.errorCode);
+                    
+                    return;
+                }
+                
+                self.cataloguesGroup = response.data.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });  
         },
         
         data: {
             showDegree: true,
             
             degreesOption: [],
+            
+            cataloguesGroup: [],
         },
         
         methods: {
@@ -139,7 +188,7 @@
               },
               
               addDegreesOption: function() {
-                  this.degreesOption.push($('#degreesOptionInput').val());
+                  this.degreesOption.push(parseInt($('#degreesOptionInput').val()));
               },
               
               resetDegreesOption: function() {
