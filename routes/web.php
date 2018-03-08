@@ -36,7 +36,7 @@ Route::group(['prefix' => 'user'], function(){
 //Merchandise
 Route::group(['prefix' => 'merchandise'], function(){
     //使用者的產品清單
-    Route::get('/', 'Merchandise\MerchandiseController@merchandiseListPage');
+    Route::get('/merchandiseType/{merchandiseType_id}', 'Merchandise\MerchandiseController@merchandiseTypeListPage');
     
     Route::group(['middleware' => ['user.auth.admin']], function() {
         //取得新增產品頁

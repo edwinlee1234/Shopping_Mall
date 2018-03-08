@@ -18,7 +18,7 @@
                     {{ trans('shop.main.infos') }}
                 </div>
                 <div class="col">
-                    {{ trans('shop.main.product') }}
+                    <a href="/merchandise/merchandiseType/1">{{ trans('shop.main.product') }}</a>
                 </div>
                 <div class="col">
                     {{ trans('shop.main.contact') }}

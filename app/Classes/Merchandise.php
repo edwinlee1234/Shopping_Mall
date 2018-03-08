@@ -141,6 +141,20 @@ class Merchandise implements MerchandiseInterface
         return true;
     }
     
+    public function getMerchandisesByTypeId($typeId, $rowPerPage)
+    {
+        $datas = MerchandiseModel::where('type', $typeId)->where('status', 'S')->paginate($rowPerPage);
+        
+        foreach($datas as &$data) {
+            $data->name = json_decode($data->name, true);
+            $data->introduction = json_decode($data->introduction, true);
+            $data->extra_info = json_decode($data->extra_info, true);
+            $data->photos = json_decode($data->photos, true);
+        }
+
+        return $datas;
+    }
+    
     public function editMerchandise(array $merchandiseDatas)
     {
         return "editMerchandise";

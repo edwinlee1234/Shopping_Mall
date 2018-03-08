@@ -77,6 +77,8 @@ class MerchandiseController extends Controller
                     return redirect()->back()->withErrors($error_message)->withInput();
                 }
             }
+            
+            $inputs['degreesOption'] = $degreesOption;
         }
         
         $merchandiseClass = Merchandise::instance();
@@ -249,5 +251,18 @@ class MerchandiseController extends Controller
             
             return $this->res;
         }        
+    }
+    
+    public function merchandiseTypeListPage(Request $request, $id)
+    {
+        $rowPerPage = 40;
+        $merchandiseClass = Merchandise::instance();
+        
+        $datas = array(
+            'title' => 'MerchandiseList',
+            'products' => $merchandiseClass->getMerchandisesByTypeId($id, $rowPerPage),
+        );
+        
+        return view('Page/Customer/MerchandiseType')->with($datas);        
     }
 }
