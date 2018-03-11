@@ -19,7 +19,7 @@ class CreateMerchandisesTable extends Migration
             $table->string('name', 120)->nullable();
             $table->string('introduction', 1200);
             $table->string('brand', 30);
-            $table->integer('type', 2);
+            $table->integer('type');
             $table->string('photos', 300)->nullable();
             $table->integer('price')->default(0);
             $table->integer('remain_count')->default(0);
