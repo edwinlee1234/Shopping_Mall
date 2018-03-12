@@ -2,10 +2,6 @@
 
 @section('title', $title)
 
-@section('style')
-@parent
-@endsection
-
 @section('content')
     <h1>cart</h1>
 @endsection

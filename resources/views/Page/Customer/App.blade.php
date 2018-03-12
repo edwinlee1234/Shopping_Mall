@@ -9,15 +9,7 @@
     <script type="text/javascript" src="/js/app.js"></script>
     <title>@yield('title')</title>
 </head>
-@section('style')
-<style type="text/css">
-    * {
-        font-family: 微軟正黑體;
-        /*border: solid 1px;*/
-    }
 
-</style>
-@show
 <body>
     @include('/Components/Header')
     
