@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Input;
 use App\Classes\Merchandise;
+use App\Classes\Lang;
+use Purifier;
+use App\Interfaces\Error as IError;
 
 class MerchandiseController extends Controller
 {
     private $res;
+    private $rowPerPage = 4;
     
     public function __construct()
     {
@@ -36,7 +40,7 @@ class MerchandiseController extends Controller
 
         $rules = [
             'name_tw' => 'required|max:80',
-            'name_ch' => 'required|max:80',
+            'name_cn' => 'required|max:80',
             'name_en' => 'required|max:80',
             'status' => 'required|in:C,S',
             'brand' => 'required|max:30',
@@ -44,7 +48,7 @@ class MerchandiseController extends Controller
             'type' => 'required',
             'remain_count' => 'required|integer|min:0',
             'intro_tw' => 'required|max:1200',
-            'intro_ch' => 'required|max:1200',
+            'intro_cn' => 'required|max:1200',
             'intro_en' => 'required|max:1200',
         ];
 
@@ -63,8 +67,8 @@ class MerchandiseController extends Controller
                 return redirect()->back()->withErrors($validator->errors())->withInput();
             }
         }
-        
-        
+
+        //valid for degrees
         if (isset($inputs['degreesOption']) && !empty($inputs['degreesOption'])) {
             $degreesOption = explode(',', $inputs['degreesOption']);
             
@@ -80,6 +84,10 @@ class MerchandiseController extends Controller
             
             $inputs['degreesOption'] = $degreesOption;
         }
+
+        Purifier::clean(Input::get('intro_tw'));
+        Purifier::clean(Input::get('intro_cn'));
+        Purifier::clean(Input::get('intro_en'));
         
         $merchandiseClass = Merchandise::instance();
         $result = $merchandiseClass->createMerchandise($inputs);
@@ -107,7 +115,7 @@ class MerchandiseController extends Controller
 
         if (count($listData) <= 0) {
             $this->res['result'] = false;
-            $this->res['errorCode'] = '1001';
+            $this->res['errorCode'] = IError::DATA_FETCH_ERROR;
             
             return $this->res;
         }
@@ -130,7 +138,7 @@ class MerchandiseController extends Controller
         
         if ($validator->fails()) {
             $this->res['result'] = false;
-            $this->res['errorCode'] = '1002';
+            $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
             
             return $this->res;
         }        
@@ -162,7 +170,7 @@ class MerchandiseController extends Controller
         
         if ($validator->fails()) {
             $this->res['result'] = false;
-            $this->res['errorCode'] = '1002';
+            $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
             
             return $this->res;
         }        
@@ -185,7 +193,7 @@ class MerchandiseController extends Controller
     {
         if (empty($id)) {
             $this->res['result'] = false;
-            $this->res['errorCode'] = '1002';
+            $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
             
             return $this->res;
         }    
@@ -210,7 +218,7 @@ class MerchandiseController extends Controller
 
         if (count($listData) <= 0) {
             $this->res['result'] = false;
-            $this->res['errorCode'] = '1001';
+            $this->res['errorCode'] = IError::DATA_FETCH_ERROR;
             
             return $this->res;
         }
@@ -234,7 +242,7 @@ class MerchandiseController extends Controller
         
         if ($validator->fails()) {
             $this->res['result'] = false;
-            $this->res['errorCode'] = '1002';
+            $this->res['errorCode'] = IError::DATA_FETCH_ERROR;
             
             return $this->res;
         }        
@@ -252,17 +260,55 @@ class MerchandiseController extends Controller
             return $this->res;
         }        
     }
-    
+
+    public function getCataloguesListDatasSubGroup()
+    {
+        $listData =  Merchandise::instance()->getCataloguesListDatasSubGroup();
+
+        if (count($listData) <= 0) {
+            $this->res['result'] = false;
+            $this->res['errorCode'] = IError::DATA_FETCH_ERROR;
+
+            return $this->res;
+        }
+
+        $this->res['result'] = true;
+        $this->res['data'] = $listData;
+
+        return $this->res;
+    }
+
     public function merchandiseTypeListPage(Request $request, $id)
     {
-        $rowPerPage = 40;
+        $rowPerPage = $this->rowPerPage;
         $merchandiseClass = Merchandise::instance();
-        
+        $lang = new Lang();
+        $merchandise = $lang->getLang($merchandiseClass->getMerchandisesByTypeId($id, $rowPerPage));
+        $types = $merchandiseClass->getCataloguesTree($id);
+
         $datas = array(
             'title' => 'MerchandiseList',
-            'products' => $merchandiseClass->getMerchandisesByTypeId($id, $rowPerPage),
+            'types' => $types,
+            'products' => $merchandise,
         );
-        
-        return view('Page/Customer/MerchandiseType')->with($datas);        
+
+        return view('Page/Customer/MerchandiseType')->with($datas);
+    }
+
+    public function merchandiseItemPage(Request $request, $id)
+    {
+
+        $merchandiseClass = Merchandise::instance();
+        $lang = new Lang();
+        $merchandise = $lang->getLang($merchandiseClass->getMerchandise($id));
+        $types = $merchandiseClass->getCataloguesTree($merchandise[0]->type);
+
+        $datas = array(
+            'title' => 'Merchandise',
+            'types' => $types,
+            'products' => $merchandise,
+        );
+
+        return view('Page/Customer/MerchandiseSingle')->with($datas);
     }
 }

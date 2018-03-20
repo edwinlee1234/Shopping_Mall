@@ -68,6 +68,28 @@ class Merchandise implements MerchandiseInterface
         
         return $lists;
     }
+
+    public function getCataloguesKey($id)
+    {
+        $key = CataloguesModel::where('id', '=', $id)->take(1)->get();
+
+        return $key[0]['type'];
+    }
+
+    public function getCataloguesTree($id)
+    {
+        $tree[] = CataloguesModel::where('id', '=', $id)->take(1)->get()[0]['parents'];
+        $tree[] = $id;
+
+        foreach ($tree as $id) {
+            $type[] = array(
+                'id' => $id,
+                'key' => $this->getCataloguesKey($id),
+            );
+        }
+
+        return $type;
+    }
     
     public function createMerchandise(array $merchandiseDatas)
     {
@@ -79,19 +101,18 @@ class Merchandise implements MerchandiseInterface
         
         $merchandiseDatas['introduction'] = json_encode(array(
             'intro_tw' => $merchandiseDatas['intro_tw'],
-            'intro_ch' => $merchandiseDatas['intro_ch'],
+            'intro_cn' => $merchandiseDatas['intro_cn'],
             'intro_en' => $merchandiseDatas['intro_en'],
-        ));
+        ), JSON_UNESCAPED_UNICODE);
         
         $merchandiseDatas['name'] = json_encode(array(
             'name_tw' => $merchandiseDatas['name_tw'],
-            'name_ch' => $merchandiseDatas['name_ch'],
+            'name_cn' => $merchandiseDatas['name_cn'],
             'name_en' => $merchandiseDatas['name_en'],
-        ));
+        ), JSON_UNESCAPED_UNICODE);
         
         $pathArray = [];
         if (isset($merchandiseDatas['photos'])) {
-            $file_name_array = array();
 
             foreach ($merchandiseDatas['photos'] as $photo) {
                 $file_name = $photo->getClientOriginalName();
@@ -144,24 +165,65 @@ class Merchandise implements MerchandiseInterface
     public function getMerchandisesByTypeId($typeId, $rowPerPage)
     {
         $datas = MerchandiseModel::where('type', $typeId)->where('status', 'S')->paginate($rowPerPage);
-        
+
+        $this->merchandiseDecode($datas);
+
+        return $datas;
+    }
+
+
+    public function getCataloguesListDatasSubGroup()
+    {
+        $data = [];
+        $lists = $this->getCataloguesList();
+
+        if (count($lists) <= 0) {
+
+            return $lists;
+        }
+
+        foreach ($lists as $list) {
+            if ($list->parents == 0) {
+                foreach ($lists as $subList) {
+                    if ($subList->parents == $list->id) {
+                        $data[] = array(
+                            'id' => $subList->id,
+                            'type' => $list->type . ":" . $subList->type,
+                        );
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    public function getMerchandise($id)
+    {
+        $datas = MerchandiseModel::where('id', $id)->take(1)->get();
+
+        $this->merchandiseDecode($datas);
+
+        return $datas;
+    }
+
+    private function merchandiseDecode($datas)
+    {
         foreach($datas as &$data) {
             $data->name = json_decode($data->name, true);
             $data->introduction = json_decode($data->introduction, true);
             $data->extra_info = json_decode($data->extra_info, true);
             $data->photos = json_decode($data->photos, true);
         }
-
-        return $datas;
     }
-    
+
     public function editMerchandise(array $merchandiseDatas)
     {
         return "editMerchandise";
     }
-    
+
     public function deleteMerchandise()
     {
         return "deleteMerchandise";
-    }   
+    }
 }
