@@ -50,8 +50,13 @@ Route::group(['prefix' => 'merchandise'], function(){
         
         //API
         Route::group(['prefix' => 'api'], function(){
+            //取得全部的分類
             Route::get('/getCataloguesListDatas', 'Merchandise\MerchandiseController@getCataloguesListDatas');
+            //取得主大類
             Route::get('/getCataloguesListDatasGroup', 'Merchandise\MerchandiseController@getCataloguesListDatasGroup');
+            //取得子類
+            Route::get('/getCataloguesListDatasSubGroup', 'Merchandise\MerchandiseController@getCataloguesListDatasSubGroup');
+
             Route::post('/addMainType', 'Merchandise\MerchandiseController@addMainType');
             Route::post('/addSubType', 'Merchandise\MerchandiseController@addSubType');
             Route::delete('/deleteType/{id}', 'Merchandise\MerchandiseController@deleteType');
@@ -60,7 +65,8 @@ Route::group(['prefix' => 'merchandise'], function(){
     });
     
     Route::group(['prefix' => '{merchandise_id}'], function(){
-        
+
+        //Admin
         Route::group(['middleware' => ['user.auth.admin']], function() {
             //取得修改產品頁
             Route::get('/edit', 'Merchandise\MerchandiseController@merchandiseItemEditPage');
@@ -68,15 +74,29 @@ Route::group(['prefix' => 'merchandise'], function(){
             Route::put('/', 'Merchandise\MerchandiseController@merchandiseItemUpdate');
         });
         
-        ////使用者的單項產品購買頁
+        //使用者的單項產品購買頁
         Route::get('/', 'Merchandise\MerchandiseController@merchandiseItemPage');
         //按了購買按鈕
         Route::post('/', 'Merchandise\MerchandiseController@merchandiseBuyProcess')->middleware(['user.auth']);
     });
 });
 
-//Order
+//Order User Only
 Route::group(['prefix' => 'order', 'middleware' => ['user.auth']], function(){
-    //取得購物車頁面
+    //取得Order頁面
     Route::get('/', 'Order\OrderController@orderListPage');
+
+});
+
+//Order User Only
+Route::group(['prefix' => 'cart', 'middleware' => ['user.auth']], function(){
+    //取得購物車頁面
+    Route::get('/', 'Order\OrderController@cartPage');
+
+    //API
+    Route::group(['prefix' => 'api'], function(){
+        //新增購物車物品
+        Route::post('/add', 'Order\OrderController@addItem');
+    });
+
 });
