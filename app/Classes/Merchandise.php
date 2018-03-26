@@ -207,14 +207,28 @@ class Merchandise implements MerchandiseInterface
         return $datas;
     }
 
-    private function merchandiseDecode($datas)
+    /**
+     * json_decode商品資料
+     * @param $datas
+     * @return mixed
+     */
+    public function merchandiseDecode(&$datas)
     {
         foreach($datas as &$data) {
-            $data->name = json_decode($data->name, true);
-            $data->introduction = json_decode($data->introduction, true);
-            $data->extra_info = json_decode($data->extra_info, true);
-            $data->photos = json_decode($data->photos, true);
+            if (isset($data->name))
+                $data->name = json_decode($data->name, true);
+
+            if (isset($data->introduction))
+                $data->introduction = json_decode($data->introduction, true);
+
+            if (isset($data->extra_info))
+                $data->extra_info = json_decode($data->extra_info, true);
+
+            if (isset($data->photos))
+                $data->photos = json_decode($data->photos, true);
         }
+
+        return $datas;
     }
 
     public function editMerchandise(array $merchandiseDatas)
