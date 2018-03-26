@@ -18,6 +18,7 @@ class CreateOrderDetailsTable extends Migration
             $table->integer('order_id');
             $table->integer('merchandise_id');
             $table->integer('buy_count');
+            $table->string('extra_info', 600)->nullable();
             $table->timestamps();
         });
     }

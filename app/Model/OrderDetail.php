@@ -14,5 +14,6 @@ class OrderDetail extends Model
         "order_id",
         "merchandise_id",
         "buy_count",
+        "extra_info",
     ];
 }
