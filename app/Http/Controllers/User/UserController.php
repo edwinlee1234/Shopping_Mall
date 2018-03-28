@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Classes\User;
+use App\Classes\Order;
 
 class UserController extends Controller
 {
@@ -67,10 +68,11 @@ class UserController extends Controller
         
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
-        }        
- 
+        }
+
         $userClass = User::instance();
-        $result = $userClass->logIn($inputs);
+        $orderClass = Order::instance();
+        $result = $userClass->logIn($inputs, $orderClass);
 
         if ($result !== true) {
             return redirect()->back()->withErrors($result)->withInput();

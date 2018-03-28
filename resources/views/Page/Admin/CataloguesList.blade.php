@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class="row cataloguesList">
-        <div class="col col-md-3">
+        <div class="col col-xl-3">
             <div class="mainType" v-for="mainData in catalogues" v-if="mainData['parents'] == 0">
                 @{{ mainData['type'] }}
                 <li class="subType" v-for="subData in catalogues" v-if="subData['parents'] == mainData['id']">
@@ -59,9 +59,9 @@
         <div class="col cataloguesBtnList">
             
             <div class="form-group">
-              <label>主大類:</label> 
+              <label>新增主大類:</label>
               <div class="row">
-                  <div class="col col-md-4">
+                  <div class="col col-xl-4">
                       <input type="text" name="mainType" class="form-control">
                   </div>
                   <div class="col">
@@ -73,15 +73,15 @@
             </div>
             
             <div class="form-group">
-              <label>子類別:</label> 
+              <label>新增子類別:</label>
               <div class="row">
-                  <div class="col col-md-3">
+                  <div class="col col-xl-3">
                     <select name='parents' class="custom-select custom-select-md">
                       <option value="-1"></option> 
                       <option v-for="data in catalogues" v-if="data['parents'] == 0" :value="data['id']">@{{ data['type'] }}</option>
                     </select>                      
                   </div>
-                  <div class="col col-md-4">
+                  <div class="col col-xl-4">
                       <input type="text" name="subType" class="form-control">
                   </div>
                   <div class="col">
@@ -95,7 +95,7 @@
             <div class="form-group">
               <label>刪除類別:</label> 
               <div class="row">
-                  <div class="col col-md-3">
+                  <div class="col col-xl-3">
                     <select name='deleteType' class="custom-select custom-select-md">
                       <option value="-1"></option>    
                       <option v-for="data in cataloguesGroup" :value="data['id']">@{{ data['type'] }}</option>
@@ -112,13 +112,13 @@
             <div class="form-group">
               <label>修改名稱:</label> 
               <div class="row">
-                  <div class="col col-md-3">
+                  <div class="col col-xl-3">
                     <select name='changeNameId' class="custom-select custom-select-md">
                       <option value="-1"></option>    
                       <option v-for="data in catalogues" :value="data['id']">@{{ data['type'] }}</option>
                     </select>                      
                   </div>
-                  <div class="col col-md-4">
+                  <div class="col col-xl-4">
                       <input type="text" name="changeNameInput" class="form-control">
                   </div>                  
                   <div class="col">

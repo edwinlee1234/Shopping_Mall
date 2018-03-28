@@ -8,6 +8,7 @@
   * {
       /*border: solid 1px;*/
   }
+
   #MerchandiseSingleForm {
       width: 800px;
       padding-left: 20px;
@@ -55,7 +56,7 @@
                 </div>
                 <div class="col">
                     <label for="name">商品名稱 (簡中)</label>
-                    <input type="text" class="form-control" name='name_ch' placeholder="簡中名稱" value="{{ old('name_ch') }}">
+                    <input type="text" class="form-control" name='name_cn' placeholder="簡中名稱" value="{{ old('name_cn') }}">
                 </div>
                 <div class="col">
                     <label for="name">商品名稱 (英文)</label>
@@ -99,18 +100,18 @@
         <div v-show="showDegree">
             <div class="form-group">
                 <label>度數</label>
-                <select class="custom-select custom-select-sm">
+                <select class="custom-select custom-select-md">
                     <option v-for='option in degreesOption'>
                         @{{ option }}
                     </option>
                 </select>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-xl-6">
                     <label for="number">新增度數</label>
                     <input type="number" class="form-control" id='degreesOptionInput' value="">
                 </div>
-                <div class="form-group col-md-6 degreesBtn">
+                <div class="form-group col-xl-6 degreesBtn">
                     <button @click='addDegreesOption()' class="btn btn-info btn-sm" type='button'>Add</button>
                     <button @click='resetDegreesOption()' class="btn btn-info btn-sm" type='button'>Reset</button>
                 </div> 
@@ -127,8 +128,8 @@
             <textarea class="form-control" rows="5" placeholder="繁中介紹" name="intro_tw">{{ old('intro_tw') }}</textarea>
         </div>
         <div class="form-group">
-            <label for="intro_ch">介紹 (簡中)</label>
-            <textarea class="form-control" rows="5" placeholder="簡中介紹" name="intro_ch">{{ old('intro_ch') }}</textarea>
+            <label for="intro_cn">介紹 (簡中)</label>
+            <textarea class="form-control" rows="5" placeholder="簡中介紹" name="intro_cn">{{ old('intro_cn') }}</textarea>
         </div>
         <div class="form-group">
             <label for="intro_en">介紹 (英文)</label>
@@ -154,7 +155,7 @@
                 this.degreesOption = oldOptionVal.split(',');
             }
             
-            axios.get('/merchandise/api/getCataloguesListDatasGroup')
+            axios.get('/merchandise/api/getCataloguesListDatasSubGroup')
             .then(function (response) {
                 console.log(response);
                 if (response.data.result !== true) {
@@ -188,7 +189,10 @@
               },
               
               addDegreesOption: function() {
+
                   this.degreesOption.push(parseInt($('#degreesOptionInput').val()));
+                  // clear old
+                  $('#degreesOptionInput').val("");
               },
               
               resetDegreesOption: function() {

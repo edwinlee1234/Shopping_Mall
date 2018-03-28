@@ -28,10 +28,10 @@
                 <input type="password" class="form-control" name="password" placeholder="Password">
             @endif
           </div>
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="checkbox">
-            <label class="form-check-label" for="checkbox">Check me out</label>
-          </div>
+          {{--<div class="form-check">--}}
+            {{--<input type="checkbox" class="form-check-input" id="checkbox">--}}
+            {{--<label class="form-check-label" for="checkbox">Check me out</label>--}}
+          {{--</div>--}}
           <br>
           <button type="submit" class="btn btn-primary">Submit</button>
         {{ Form::close() }}

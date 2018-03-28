@@ -5,12 +5,22 @@
 // Variables
 @import "variables";
 
+//Common
+@import "common";
+
 // Page
 @import "header";
 @import "footer";
-
+@import "merchandisetype";
+@import "merchandisesingle";
+@import "logobar";
+@import "navbar";
+@import "cart";
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-
+* {
+  font-family: 微軟正黑體;
+  //border: solid 1px;
+}

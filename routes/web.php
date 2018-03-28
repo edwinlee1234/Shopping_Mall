@@ -97,6 +97,10 @@ Route::group(['prefix' => 'cart', 'middleware' => ['user.auth']], function(){
     Route::group(['prefix' => 'api'], function(){
         //新增購物車物品
         Route::post('/add', 'Order\OrderController@addItem');
+        //delete
+        Route::put('/del', 'Order\OrderController@delItem');
+        Route::put('/changeBuyCount', 'Order\OrderController@changeBuyCount');
+        Route::put('/checkout', 'Order\OrderController@checkout');
     });
 
 });

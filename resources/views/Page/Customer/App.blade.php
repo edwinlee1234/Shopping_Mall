@@ -14,7 +14,7 @@
     @include('/Components/Header')
     
     <div class="container">
-        @include('/Page/Customer/Jumbotron')
+        @include('/Page/Customer/LogoBar')
         
         @yield('content')
         

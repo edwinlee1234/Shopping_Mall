@@ -231,6 +231,13 @@ class Merchandise implements MerchandiseInterface
         return $datas;
     }
 
+    public function checkMerchandiseRemain($id)
+    {
+        $data = MerchandiseModel::find($id);
+
+        return $data->remain_count;
+    }
+
     public function editMerchandise(array $merchandiseDatas)
     {
         return "editMerchandise";

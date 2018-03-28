@@ -9,7 +9,7 @@ interface UserInterface
     
     public function getAllContent();
     
-    public function logIn(array $logInDatas);
+//    public function logIn(array $logInDatas);
     
     public function logOut();
     

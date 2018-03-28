@@ -20,7 +20,15 @@ class Order implements OrderInterface
         return self::$orderClass;
     }
 
-    public function addItem($merchandiseId, $num, $userId)
+    /**
+     * Add Cart Item
+     * @param $merchandiseId
+     * @param $num
+     * @param $extra
+     * @param $userId
+     * @return int
+     */
+    public function addItem($merchandiseId, $num, $extra, $userId)
     {
         // find old
         $order = $this->checkOrderByNotPay($userId);
@@ -37,18 +45,62 @@ class Order implements OrderInterface
             'order_id' => $orderId,
             'merchandise_id' => $merchandiseId,
             'buy_count' => $num,
+            'extra_info' => json_encode($extra),
         ));
+
+        return $this->countCartItem($orderId);
+    }
+
+    /**
+     * Delete Cart Item
+     * @param $id
+     * @return bool
+     */
+    public function delItem($id)
+    {
+        OrderDetailModel::where('id', '=', $id)->delete();
 
         return true;
     }
 
-    private function checkOrderByNotPay($userId)
+    /**
+     * 查詢還沒結算的訂單
+     * @param $userId
+     * @return mixed
+     */
+    public function checkOrderByNotPay($userId)
     {
         $order = OrderModel::where('user_id', '=', $userId)->where('status', '=', 'N')->take(1)->get();
 
         return $order;
     }
 
+
+    public function countCartItem($orderId = null, $user_id = null)
+    {
+        if (!is_null($orderId)) {
+
+            return OrderDetailModel::where('order_id', '=', $orderId)->count();
+        }
+
+        if (!is_null($user_id)) {
+            $order = $this->checkOrderByNotPay($user_id);
+
+            if (count($order) <= 0) {
+
+                return 0;
+            }
+
+            $orderId = $order[0]['id'];
+            return OrderDetailModel::where('order_id', '=', $orderId)->count();
+        }
+    }
+
+    /**
+     * Create Order
+     * @param $userId
+     * @return mixed
+     */
     private function createOrder($userId)
     {
         $order = OrderModel::create(
@@ -58,6 +110,84 @@ class Order implements OrderInterface
         );
 
         return $order;
+    }
+
+    /**
+     * 取得Cart的內容 (用order_id join merchandise and order_detail)
+     * @param $orderId
+     * @return mixed
+     */
+    public function getOrderDetailIncludeMerchandise($orderId)
+    {
+        $orderDetail = OrderDetailModel::join('merchandises', 'order_details.merchandise_id', '=', 'merchandises.id')
+            ->select(
+                'merchandises.id as merchandises_id',
+                'merchandises.name',
+                'merchandises.photos',
+                'merchandises.price',
+                'merchandises.remain_count',
+                'order_details.id as order_detail_id',
+                'order_details.extra_info',
+                'order_details.buy_count'
+            )
+            ->where('order_details.order_id', '=', $orderId)
+            ->getQuery()
+            ->get();
+
+        return $this->countTotal($orderDetail);
+    }
+
+    /**
+     * 計算每一項的數量 x 價格
+     * @param $orderDetails
+     * @return mixed
+     */
+    private function countTotal($orderDetails)
+    {
+        // TODO 如果之後有減價活動什麼的, 就不能這樣寫了
+        foreach ($orderDetails as &$orderDetail) {
+            $orderDetail->total = $orderDetail->price * $orderDetail->buy_count;
+        }
+
+        return $orderDetails;
+    }
+
+    /**
+     * 計算整張訂單的價格
+     * @param array $orders
+     * @return int
+     */
+    public function countOrderTotalPrice($orders)
+    {
+        $sum = 0;
+
+        foreach ($orders as $order) {
+            $sum += $order->total;
+        }
+
+        return $sum;
+    }
+
+    public function changeBuyCount($datas, \App\Interfaces\MerchandiseInterface $merchandiseClass)
+    {
+        foreach ($datas as $data) {
+            $orderDetail = OrderDetailModel::find($data['id']);
+            $remainCount = $merchandiseClass->checkMerchandiseRemain($orderDetail->merchandise_id);
+
+            if ($data['buy_count'] > $remainCount) {
+                return false;
+            }
+
+            $orderDetail->buy_count = $data['buy_count'];
+            $orderDetail->save();
+        }
+
+        return true;
+    }
+
+    public function checkout()
+    {
+
     }
     
     public function getId() 

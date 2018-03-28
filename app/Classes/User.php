@@ -59,7 +59,7 @@ class User implements UserInterface
         return true;        
     }
     
-    public function logIn(array $logInDatas)
+    public function logIn(array $logInDatas, \App\Interfaces\OrderInterface $orderClass)
     {
         $errorMessage = array();
 
@@ -82,6 +82,7 @@ class User implements UserInterface
         session()->put('user_info', array(
             'id' => $user->id, 
             'name' => $user->name,
+            'cart_num' => $orderClass->countCartItem(null, $user->id),
         ));
 
         return true;

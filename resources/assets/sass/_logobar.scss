@@ -1,0 +1,39 @@
+#logoBar {
+
+  a, li {
+    text-decoration-style: -moz-none;
+    text-decoration: none;
+  }
+
+  .productLink {
+    position: relative;
+    .dropmenu {
+      position: absolute;
+      transition-duration: 0.3s;
+      height: 0px;
+      width: 80px;
+      background-color: $gray-bg;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    &:hover {
+      .dropmenu{
+        height: 120px;
+      }
+    }
+  }
+
+  .functionList {
+    text-align: center;
+
+    .col {
+      padding-top: 25px;
+      font-size: 18px;
+    }
+  }
+
+  .logo {
+    height: 80px;
+  }
+}
