@@ -12,7 +12,9 @@ class Merchandise extends Model
     
     protected $fillable = [
         "status",
-        "name",
+        "name_tw",
+        "name_cn",
+        "name_en",
         "introduction",
         "brand",
         "type",

@@ -122,7 +122,9 @@ class Order implements OrderInterface
         $orderDetail = OrderDetailModel::join('merchandises', 'order_details.merchandise_id', '=', 'merchandises.id')
             ->select(
                 'merchandises.id as merchandises_id',
-                'merchandises.name',
+                'merchandises.name_tw',
+                'merchandises.name_cn',
+                'merchandises.name_en',
                 'merchandises.photos',
                 'merchandises.price',
                 'merchandises.remain_count',

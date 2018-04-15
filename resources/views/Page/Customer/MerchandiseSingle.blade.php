@@ -40,7 +40,7 @@
                         <div class="degrees">
                             <label for="degrees">Degees:</label>
                             <br>
-                            <select name="degrees" id="degrees">
+                            <select name="degrees" id="degrees" class="custom-select custom-select-md">
                                 @foreach ($product->extra_info['degrees'] as $value)
                                     <option value="{{$value}}">{{$value}}</option>
                                 @endforeach
@@ -51,7 +51,7 @@
                     <div class="num">
                         <label for="number">Number:</label>
                         <br>
-                        <select name="number">
+                        <select name="number" class="custom-select custom-select-md">
                             @if ($product->remain_count > 20)
                                 @for ($i = 1; $i <= 20; $i++)
                                     <option value="{{ $i }}">{{ $i }}</option>
@@ -121,6 +121,7 @@
                         $('#cartNum').text(cartNumber);
 
                         // TODO 多加一個通知成功
+                        alert("Success");
                     })
                     .catch(function (error) {
                         console.log(error);

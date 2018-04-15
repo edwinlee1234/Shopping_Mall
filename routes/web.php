@@ -13,6 +13,10 @@
 
 //Home
 Route::get('/', 'HomeController@index');
+//Info
+Route::get('/infos', 'HomeController@infoPage');
+//Contact
+Route::get('/contact', 'HomeController@contactPage');
 
 //Admin
 Route::group(['prefix' => 'admin'], function(){
@@ -37,6 +41,8 @@ Route::group(['prefix' => 'user'], function(){
 Route::group(['prefix' => 'merchandise'], function(){
     //使用者的產品清單
     Route::get('/merchandiseType/{merchandiseType_id}', 'Merchandise\MerchandiseController@merchandiseTypeListPage');
+    //搜查商品
+    Route::post('search', 'Merchandise\MerchandiseController@search');
     
     Route::group(['middleware' => ['user.auth.admin']], function() {
         //取得新增產品頁
@@ -48,7 +54,7 @@ Route::group(['prefix' => 'merchandise'], function(){
         //取得商品目錄清單頁
         Route::get('/cataloguesListPage', 'Merchandise\MerchandiseController@merchandiseCataloguesListPage');
         
-        //API
+        //API for admin
         Route::group(['prefix' => 'api'], function(){
             //取得全部的分類
             Route::get('/getCataloguesListDatas', 'Merchandise\MerchandiseController@getCataloguesListDatas');
@@ -56,7 +62,7 @@ Route::group(['prefix' => 'merchandise'], function(){
             Route::get('/getCataloguesListDatasGroup', 'Merchandise\MerchandiseController@getCataloguesListDatasGroup');
             //取得子類
             Route::get('/getCataloguesListDatasSubGroup', 'Merchandise\MerchandiseController@getCataloguesListDatasSubGroup');
-
+            
             Route::post('/addMainType', 'Merchandise\MerchandiseController@addMainType');
             Route::post('/addSubType', 'Merchandise\MerchandiseController@addSubType');
             Route::delete('/deleteType/{id}', 'Merchandise\MerchandiseController@deleteType');
@@ -71,7 +77,7 @@ Route::group(['prefix' => 'merchandise'], function(){
             //取得修改產品頁
             Route::get('/edit', 'Merchandise\MerchandiseController@merchandiseItemEditPage');
             //修改產品頁
-            Route::put('/', 'Merchandise\MerchandiseController@merchandiseItemUpdate');
+            Route::put('/update', 'Merchandise\MerchandiseController@merchandiseItemUpdate');
         });
         
         //使用者的單項產品購買頁

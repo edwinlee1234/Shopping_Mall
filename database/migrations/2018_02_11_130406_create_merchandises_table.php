@@ -16,7 +16,9 @@ class CreateMerchandisesTable extends Migration
         Schema::create('merchandises', function (Blueprint $table) {
             $table->increments('id');
             $table->string('status', 1)->default('C')->comment('C 建立中、S 可販售')->index();
-            $table->string('name', 120)->nullable();
+            $table->string('name_tw', 120)->nullable();
+            $table->string('name_cn', 120)->nullable();
+            $table->string('name_en', 120)->nullable();
             $table->string('introduction', 1200);
             $table->string('brand', 30);
             $table->integer('type');

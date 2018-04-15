@@ -23,5 +23,23 @@ class HomeController extends Controller
 
         return view('Page/Admin/Home')->with($datas);
     }
+    
+    public function infoPage()
+    {
+        $datas = array(
+            'title' => 'Info'
+        );
+
+        return view('Page/Customer/Infos')->with($datas);        
+    }
+    
+    public function contactPage()
+    {
+        $datas = array(
+            'title' => 'Contact'
+        );
+
+        return view('Page/Customer/Contact')->with($datas);        
+    }
 }
 

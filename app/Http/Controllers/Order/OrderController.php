@@ -141,6 +141,11 @@ class OrderController extends Controller
 
         $orderClass = Order::instance();
         $result = $orderClass->delItem($inputs['id']);
+        
+        // change session cart num
+        $user_info = session()->get('user_info');
+        $user_info['cart_num']--;
+        session()->put('user_info', $user_info);
 
         if ($result) {
             $this->res['result'] = true;

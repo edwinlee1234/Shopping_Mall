@@ -3,7 +3,7 @@
 return [
     'main' => [
         'infos' => 'Infos',
-        'product' => 'Products',
+        'contacts' => 'Contacts',
         'contact' => 'Contact',
         'cart' => 'Cart',
     ],

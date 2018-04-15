@@ -3,7 +3,7 @@
 return [
     'main' => [
         'infos' => '介绍',
-        'product' => '产品',
+        'contacts' => '隐形',
         'contact' => '联络',
         'cart' => '购物车',
     ],

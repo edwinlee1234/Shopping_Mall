@@ -47,7 +47,7 @@
                     @endif
                 </div>
                 <div class="col selectOption">
-                    <select class="cart_select_buy_count_{{ $order->order_detail_id }}" @change="changeNum({{ $order->order_detail_id }})">
+                    <select class="cart_select_buy_count_{{ $order->order_detail_id }} custom-select custom-select-md" @change="changeNum({{ $order->order_detail_id }})">
                         @if ($order->remain_count > 20)
                             @for ($i = 1; $i <= 20; $i++)
                                 @if ($i == $order->buy_count)

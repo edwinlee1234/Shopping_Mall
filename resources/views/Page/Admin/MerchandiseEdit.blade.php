@@ -35,7 +35,7 @@
 <div id="MerchandiseSingleForm">
     <div class="row">
         <div class="col">
-            <h1>商品新增</h1>
+            <h1>商品更新</h1>
         </div>
     </div>
     <div id="ontherOption">
@@ -46,50 +46,90 @@
         </div>        
     </div>
 
-    {{ Form::open(array('url' => 'merchandise/create', 'method' => 'post', 'files' => true)) }}
+    {{ Form::open(array('url' => 'merchandise/' . $products->id . '/update', 'method' => 'put', 'files' => true)) }}
         {{ Form::token() }}
         <div class="form-group">
             <div class="row">
                 <div class="col">
                     <label for="name">商品名稱 (繁中)</label>
-                    <input type="text" class="form-control" name='name_tw' placeholder="繁中名稱" value="{{ old('name_tw') }}">
+                    @if (old('name_tw'))
+                        <input type="text" class="form-control" name='name_tw' placeholder="繁中名稱" value="{{ old('name_tw') }}">
+                    @else
+                        <input type="text" class="form-control" name='name_tw' placeholder="繁中名稱" value="{{ $products->name_tw }}">
+                    @endif
                 </div>
                 <div class="col">
                     <label for="name">商品名稱 (簡中)</label>
-                    <input type="text" class="form-control" name='name_cn' placeholder="簡中名稱" value="{{ old('name_cn') }}">
+                    @if (old('name_cn'))
+                        <input type="text" class="form-control" name='name_cn' placeholder="繁中名稱" value="{{ old('name_cn') }}">
+                    @else
+                        <input type="text" class="form-control" name='name_cn' placeholder="繁中名稱" value="{{ $products->name_cn }}">
+                    @endif
                 </div>
                 <div class="col">
                     <label for="name">商品名稱 (英文)</label>
-                    <input type="text" class="form-control" name='name_en' placeholder="英文名稱" value="{{ old('name_en') }}">
+                    @if (old('name_en'))
+                        <input type="text" class="form-control" name='name_en' placeholder="繁中名稱" value="{{ old('name_en') }}">
+                    @else
+                        <input type="text" class="form-control" name='name_en' placeholder="繁中名稱" value="{{ $products->name_en }}">
+                    @endif
                 </div>
             </div>
         </div>
         <div class="form-group">
             <label for="brand">品牌</label>
-            <input type="text" class="form-control" name='brand' placeholder="品牌" value="{{ old('brand') }}">
+            @if (old('brand'))
+                <input type="text" class="form-control" name='brand' placeholder="品牌" value="{{ old('brand') }}">
+            @else
+                <input type="text" class="form-control" name='brand' placeholder="品牌" value="{{ $products->brand }}">
+            @endif
         </div>
         <div class="form-group">
             <label for="price">價格</label>
-            <input type="number" class="form-control" name='price' placeholder="價格" value="{{ old('price') }}">
+            @if (old('price'))
+                <input type="number" class="form-control" name='price' placeholder="價格" value="{{ old('price') }}">
+            @else
+                <input type="number" class="form-control" name='price' placeholder="價格" value="{{ $products->price }}">
+            @endif
         </div>            
         <div class="form-group">
             <label for="remain_count">存貨</label>
-            <input type="number" class="form-control" name='remain_count' placeholder="存貨" value="{{ old('remain_count') }}">
+            @if (old('remain_count'))
+                <input type="number" class="form-control" name='remain_count' placeholder="存貨" value="{{ old('remain_count') }}">
+            @else
+                <input type="number" class="form-control" name='remain_count' placeholder="存貨" value="{{ $products->remain_count }}">
+            @endif
         </div>            
         <div class="form-group">
             <label for="status">商品狀態</label>
+            <!-- 這邊結構有點亂 -->
+            <!-- 有old的資料先用, 沒有就用db的 -->
             <select class="form-control" id="status" name='status'>
-                <option value='C' 
-                @if(old('status') === 'C') 
-                    selected 
-                @endif>
-                    建立中
-                </option>
-                <option value='S' 
-                @if(old('status') === 'S') 
-                    selected 
-                @endif>可販售</option>
+                @if (old('status'))
+                    <option value='C' 
+                    @if(old('status') === 'C') 
+                        selected 
+                    @endif>
+                        建立中
+                    </option>
+                    <option value='S' 
+                    @if(old('status') === 'S') 
+                        selected 
+                    @endif>可販售</option>
+                @else
+                    <option value='C' 
+                    @if ($products->status === 'C') 
+                        selected 
+                    @endif>
+                        建立中
+                    </option>
+                    <option value='S' 
+                    @if ($products->status === 'S') 
+                        selected 
+                    @endif>可販售</option>                    
+                @endif
             </select>
+            
         </div>
         <div class="form-group">
             <label for="type">商品類型</label>
@@ -105,6 +145,7 @@
                         @{{ option }}
                     </option>
                 </select>
+                <input type="hidden" name="extra_info_degrees" value="{{ json_encode($products->extra_info['degrees']) }}"/>
             </div>
             <div class="form-row">
                 <div class="form-group col-xl-6">
@@ -119,44 +160,54 @@
             <input type="hidden" name="degreesOption" :value="degreesOption">
             <input type="hidden" name="oldOption" value="{{ old('degreesOption') }}">
         </div>
+        
+        <!-- TODO 圖片的修改這邊滿麻煩的, 後面再來修改這個 -->
         <!--<div class="form-group">-->
-        <!--    <label for="photos">圖片</label>-->
-        <!--    {{ Form::file('image', ['name' => 'photos[]', 'multiple' => true, 'class' => 'form-control-file']) }}-->
+        <!--    <label for="photos1">圖片1</label>-->
+        <!--    {{ Form::file('image', ['name' => 'photos1', 'multiple' => false, 'class' => 'form-control-file']) }}-->
         <!--</div>-->
-        <div class="form-group">
-            <label for="photos1">圖片1</label>
-            {{ Form::file('image', ['name' => 'photos1', 'multiple' => false, 'class' => 'form-control-file']) }}
-        </div>
-        <div class="form-group">
-            <label for="photos2">圖片2</label>
-            {{ Form::file('image', ['name' => 'photos2', 'multiple' => false, 'class' => 'form-control-file']) }}
-        </div>
-        <div class="form-group">
-            <label for="photos3">圖片3</label>
-            {{ Form::file('image', ['name' => 'photos3', 'multiple' => false, 'class' => 'form-control-file']) }}
-        </div>
-        <div class="form-group">
-            <label for="photos4">圖片4</label>
-            {{ Form::file('image', ['name' => 'photos4', 'multiple' => false, 'class' => 'form-control-file']) }}
-        </div>
-        <div class="form-group">
-            <label for="photos5">圖片5</label>
-            {{ Form::file('image', ['name' => 'photos5', 'multiple' => false, 'class' => 'form-control-file']) }}
-        </div>
+        <!--<div class="form-group">-->
+        <!--    <label for="photos2">圖片2</label>-->
+        <!--    {{ Form::file('image', ['name' => 'photos2', 'multiple' => false, 'class' => 'form-control-file']) }}-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--    <label for="photos3">圖片3</label>-->
+        <!--    {{ Form::file('image', ['name' => 'photos3', 'multiple' => false, 'class' => 'form-control-file']) }}-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--    <label for="photos4">圖片4</label>-->
+        <!--    {{ Form::file('image', ['name' => 'photos4', 'multiple' => false, 'class' => 'form-control-file']) }}-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--    <label for="photos5">圖片5</label>-->
+        <!--    {{ Form::file('image', ['name' => 'photos5', 'multiple' => false, 'class' => 'form-control-file']) }}-->
+        <!--</div>-->
         
         <div class="form-group">
             <label for="intro_tw">介紹 (繁中) <a href="https://htmlg.com/html-editor/" target="_blank">HTML 編輯器</a> </label>
-            <textarea class="form-control" rows="8" placeholder="繁中介紹" name="intro_tw">{{ old('intro_tw') }}</textarea>
+            @if (old('intro_tw'))
+                <textarea class="form-control" rows="8" placeholder="英文介紹" name="intro_tw">{{ old('intro_tw') }}</textarea>
+            @else
+                <textarea class="form-control" rows="8" placeholder="繁中介紹" name="intro_tw">{{ $products->introduction['intro_tw'] }}</textarea>
+            @endif
         </div>
         <div class="form-group">
             <label for="intro_cn">介紹 (簡中) <a href="https://htmlg.com/html-editor/" target="_blank">HTML 編輯器</a> </label>
-            <textarea class="form-control" rows="8" placeholder="簡中介紹" name="intro_cn">{{ old('intro_cn') }}</textarea>
+            @if (old('intro_cn'))
+                <textarea class="form-control" rows="8" placeholder="英文介紹" name="intro_cn">{{ old('intro_cn') }}</textarea>
+            @else
+                <textarea class="form-control" rows="8" placeholder="繁中介紹" name="intro_cn">{{ $products->introduction['intro_cn'] }}</textarea>
+            @endif
         </div>
         <div class="form-group">
             <label for="intro_en">介紹 (英文) <a href="https://htmlg.com/html-editor/" target="_blank">HTML 編輯器</a> </label>
-            <textarea class="form-control" rows="8" placeholder="英文介紹" name="intro_en">{{ old('intro_en') }}</textarea>
+            @if (old('intro_en'))
+                <textarea class="form-control" rows="8" placeholder="英文介紹" name="intro_en">{{ old('intro_en') }}</textarea>
+            @else
+                <textarea class="form-control" rows="8" placeholder="繁中介紹" name="intro_en">{{ $products->introduction['intro_en'] }}</textarea>
+            @endif
         </div>
-        <button class="btn btn-primary submitBtn" type="submit">提交</button>
+        <button class="btn btn-primary submitBtn" type="submit">更新</button>
     {{ Form::close() }}  
 </div>
 
@@ -174,8 +225,11 @@
             let self = this;
             let oldOptionVal = $('input[name=oldOption]').val();
 
+            // 先用old的資料, 沒有就用db的
             if (oldOptionVal !== "") {
                 this.degreesOption = oldOptionVal.split(',');
+            } else {
+                this.degreesOption = JSON.parse($("input[name=extra_info_degrees]").val());
             }
             
             axios.get('/merchandise/api/getCataloguesListDatasSubGroup')

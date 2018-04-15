@@ -17,7 +17,7 @@
               <a class="active" href="#merchandiseMenu" data-toggle="collapse" aria-expanded="false">商品</a>
               <ul class="collapse list-unstyled" id="merchandiseMenu">
                 <li><a href="/merchandise/cataloguesListPage">商品目錄</a></li>  
-                <li><a href="#">商品清單</a></li>
+                <li><a href="/merchandise/manage">商品清單</a></li>
                 <li><a href="/merchandise/create">新增商品</a></li>
               </ul>
             </li>
