@@ -96,7 +96,7 @@
                 <button type="button" class="btn btn-success" @click="update">{{ trans('shop.order.update') }}</button>
             </div>
             <div class="col col-lg-1">
-                <a href="">
+                <a href="cart/checkout">
                     <button type="button" class="btn btn-primary">{{ trans('shop.order.checkout') }}</button>
                 </a>
             </div>
@@ -155,7 +155,6 @@
                     .then(function (response) {
                         if (response.data.result !== true) {
                             console.log(response.data.errorCode);
-
                             return;
                         }
 

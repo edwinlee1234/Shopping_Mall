@@ -1,7 +1,4 @@
 #merchandiseSingle {
-  //margin-top: 15px;
-  //margin-bottom: 15px;
-
   p {
     margin: 0px;
     padding: 0px;
@@ -9,6 +6,7 @@
 
   .breadcrumb {
     @extend %breadcrumbCommon;
+    padding-bottom: 10px;
   }
 
   .showImg {
@@ -18,7 +16,7 @@
     height: 600px;
 
     .img {
-      width: 100%;
+      width: 80%;
       height: 100%;
     }
   }

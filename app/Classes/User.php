@@ -22,12 +22,16 @@ class User implements UserInterface
     
     public function getId() 
     {
-        return "getId";
+        $id = session()->get('user_info')['id'];
+
+        return $id ? $id : null;
     }
     
-    public function getAllContent()
+    public function getAllContent($id)
     {
-        return "getAllContent";
+        $userData = UserModel::find($id);
+
+        return $userData;
     }
     
     public function adminLogIn(array $logInDatas)

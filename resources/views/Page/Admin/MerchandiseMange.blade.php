@@ -69,7 +69,7 @@
             </div>
             <div class="col">
                 <label>名稱搜尋:</label>
-                <input name="nameKey" type="text" id="adminSearchNameInput" class="form-control nameSearchInput" name='name' placeholder="名稱">
+                <input name="nameKey" type="text" id="adminSearchNameInput" class="form-control nameSearchInput" placeholder="名稱">
             </div>
             <div class="col">
                 <label>排序:</label>

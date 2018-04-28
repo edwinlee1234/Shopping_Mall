@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 //Home
 Route::get('/', 'HomeController@index');
 //Info
@@ -87,17 +76,22 @@ Route::group(['prefix' => 'merchandise'], function(){
     });
 });
 
-//Order User Only
-Route::group(['prefix' => 'order', 'middleware' => ['user.auth']], function(){
-    //取得Order頁面
-    Route::get('/', 'Order\OrderController@orderListPage');
 
+Route::group(['prefix' => 'order'], function(){
+    Route::group(['prefix' => 'admin', 'middleware' => ['user.auth.admin']], function(){
+        Route::get('/mange', 'Order\OrderController@orderAdminMangePage');
+        Route::post('/search', 'Order\OrderController@orderSearch');
+    });
 });
 
 //Order User Only
 Route::group(['prefix' => 'cart', 'middleware' => ['user.auth']], function(){
     //取得購物車頁面
     Route::get('/', 'Order\OrderController@cartPage');
+    //checkout page
+    Route::get('/checkout', 'Order\OrderController@checkoutPage');
+    //checkout post
+    Route::post('/checkoutProcess', 'Order\OrderController@checkoutProcess');
 
     //API
     Route::group(['prefix' => 'api'], function(){

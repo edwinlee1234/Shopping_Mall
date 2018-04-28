@@ -7,7 +7,7 @@ interface UserInterface
     
     public function getId();
     
-    public function getAllContent();
+    public function getAllContent($id);
     
 //    public function logIn(array $logInDatas);
     

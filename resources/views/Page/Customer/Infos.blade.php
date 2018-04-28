@@ -4,6 +4,7 @@
 
 @section('content')
     <h1>infos</h1>
+    <p></p>
 @endsection
 
 @section('script')

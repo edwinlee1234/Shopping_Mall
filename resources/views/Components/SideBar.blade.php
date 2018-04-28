@@ -25,7 +25,7 @@
             <li>
                 <a href="#orderMenu" data-toggle="collapse" aria-expanded="false">訂單</a>
                 <ul class="collapse list-unstyled" id="orderMenu">
-                    <li><a href="#">訂單清單</a></li>
+                    <li><a href="/order/admin/mange">訂單清單</a></li>
 
                 </ul>
             </li> 

@@ -18,7 +18,10 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id');
             $table->integer('total_price')->nullable();
             $table->string('pay_type', 3)->nullable();
-            $table->string('status', 1)->default('N')->comment('N 沒付款、Y 己付款、X 取消訂單');            
+            $table->string('address', 200)->nullable();
+            $table->string('phone', 30)->nullable();
+            $table->string('name', 200)->nullable();
+            $table->string('status', 1)->default('C')->comment('C 購物車、N 沒付款、Y 己付款、X 取消訂單');
             $table->timestamps();
         });
     }

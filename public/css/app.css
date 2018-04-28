@@ -14,6 +14,8 @@
 #footer {
   text-align: center;
   height: 150px;
+  margin-top: 40px;
+  padding-top: 15px;
 }
 
 #merchandiseType .card {
@@ -42,6 +44,10 @@
   padding: 0px;
 }
 
+#merchandiseSingle .breadcrumb {
+  padding-bottom: 10px;
+}
+
 #merchandiseSingle .showImg {
   position: relative;
   text-align: center;
@@ -50,7 +56,7 @@
 }
 
 #merchandiseSingle .showImg .img {
-  width: 100%;
+  width: 80%;
   height: 100%;
 }
 
@@ -166,6 +172,19 @@
 #cart .displayTotal {
   font-size: 25px;
   margin-bottom: 30px;
+}
+
+#Home .showcase .ser1-title {
+  padding: 20px 0px 10px 10px;
+}
+
+#Home .showcase .showcase-img {
+  text-align: center;
+}
+
+#Home .showcase .showcase-img .ser1-img {
+  width: 300px;
+  height: 250px;
 }
 
 /*!
