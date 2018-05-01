@@ -44,7 +44,7 @@
                 {{--</div>--}}
                 <div class="col">
                     <label>單訂編號</label>
-                    <input name="orderId" type="text" class="form-control nameSearchInput" placeholder="單訂編號">
+                    <input name="orderId" type="text" class="form-control" placeholder="單訂編號">
                 </div>
                 <div class="col">
                     <button class="btn btn-primary submitBtn" type="submit">Search</button>
@@ -59,6 +59,7 @@
                 <th scope="col">收件人名稱</th>
                 <th scope="col">總金額</th>
                 <th scope="col">單訂狀態</th>
+                <th scope="col">功能</th>
             </tr>
             </thead>
             <tbody>
@@ -76,6 +77,11 @@
                             已取消
                         @endif
 
+                    </td>
+                    <td>
+                        <a href="/order/admin/edit/{{ $orderData->id }}">
+                            <button type="button" class="btn btn-primary btn-sm">修改</button>
+                        </a>
                     </td>
                 </tr>
             @endforeach

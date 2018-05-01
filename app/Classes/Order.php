@@ -252,9 +252,28 @@ class Order implements OrderInterface
 
     }
 
-    public function getAllOrder()
+    public function getAllOrderNotIncludeCart()
     {
-        return OrderModel::all();
+        return OrderModel::where('status', '!=', 'C')->get();
+    }
+
+    public function searchOrder($orderId = null, $status)
+    {
+        if ($orderId !== null) {
+            return OrderModel::where('id', '=', $orderId)->get();
+        }
+
+        return OrderModel::where('status', '=', $status)->get();
+    }
+
+    public function getOrderById($orderId)
+    {
+        return OrderModel::find($orderId);
+    }
+
+    public function orderUpdate(array $input)
+    {
+
     }
 
     public function getId()

@@ -15,7 +15,8 @@
       padding-top: 10px;
   }
   #MerchandiseMange .productsList p {
-      font-size: 10px;
+      font-size: 13px;
+      margin: 0px;
   }
   
   #MerchandiseMange .serachKey {
@@ -39,7 +40,7 @@
   }
   
   #MerchandiseMange .card-body {
-      height: 50px;
+      height: 75px;
   }
 </style>
 @endsection
@@ -102,6 +103,11 @@
                                 </div>
                                 <div class="col col-xl-4">
                                     <p> $ {{ $products[$i]->price }} </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-xl-12">
+                                    <p>存貨: {{ $products[$i]->remain_count }} </p>
                                 </div>
                             </div>
                         </div>

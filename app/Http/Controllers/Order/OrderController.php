@@ -32,7 +32,7 @@ class OrderController extends Controller
 
         $datas = array(
             'title' => 'Order mange',
-            'orderDatas' => $orderClass->getAllOrder(),
+            'orderDatas' => $orderClass->getAllOrderNotIncludeCart(),
         );
 
         return view('Page/Admin/OrderMange')->with($datas);
@@ -77,6 +77,25 @@ class OrderController extends Controller
         );
 
         return view('Page/Customer/Cart')->with($datas);
+    }
+
+    public function orderEditPage(Request $request, $orderId)
+    {
+        $orderClass = Order::instance();
+        $merchandiseClass = Merchandise::instance();
+        $lang = new Lang();
+
+        $orderDetail = $orderClass->getOrderDetailIncludeMerchandise($orderId);
+        $orderDetail = $merchandiseClass->merchandiseDecode($orderDetail);
+        $orderDetail = $lang->getLang($orderDetail);
+
+        $datas = array(
+            'title' => 'Order Edit',
+            'orderData' => $orderClass->getOrderById($orderId),
+            'orderDetails' => $orderDetail,
+        );
+
+        return view('Page/Admin/OrderEdit')->with($datas);
     }
 
     public function addItem(Request $request)
@@ -211,12 +230,8 @@ class OrderController extends Controller
         }
 
         // reset cart num
-        $userInfo = session()->has('user_info');
-        session()->put('user_info', array(
-            'id' => $userInfo['id'],
-            'name' => $userInfo['name'],
-            'cart_num' => 0,
-        ));
+//        $userInfo = session()->has('user_info');
+        session()->put('cart_num', 0);
 
         return redirect()->to('/');
     }
@@ -227,12 +242,13 @@ class OrderController extends Controller
 
         $rules = [
             'status' => 'required|in:1,N,Y,X',
+//            'process' => 'required|in:1,N,I,D',
         ];
 
         $validator = Validator::make($inputs, $rules);
 
         // check orderid int
-        if (!empty($inputs['orderId']) && !is_int($inputs['orderId'])) {
+        if (!is_null($inputs['orderId']) && !preg_match("/^[0-9]*$/", $inputs['orderId'])) {
             $error_message = array(
                 'orderId' => 'The orderId must be an integer.',
             );
@@ -241,6 +257,46 @@ class OrderController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+        $orderClass = Order::instance();
+
+        $datas = array(
+            'title' => 'Order mange',
+            'orderDatas' => $orderClass->searchOrder($inputs['orderId'], $inputs['status']),
+        );
+
+        return view('Page/Admin/OrderMange')->with($datas);
+    }
+
+    public function orderEditProcess(Request $request, $orderId)
+    {
+        $inputs = $request->all();
+
+        $rules = [
+            'name' => 'required',
+            'phoneNumber' => 'required',
+            'address' => 'required',
+            'payment' => 'required',
+            'status' => 'required|in:1,N,Y,X',
+            'process' => 'required|in:N,I,D',
+        ];
+
+        $validator = Validator::make($inputs, $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+        $orderClass = Order::instance();
+        $res = $orderClass->orderUpdate($inputs);
+
+        if ($res === true) {
+            $success_message = array(
+                'success' => '更新成功',
+            );
+
+            return redirect()->back()->with($success_message);
         }
     }
 }

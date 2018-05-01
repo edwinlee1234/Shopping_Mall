@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('phone', 30)->nullable();
             $table->string('name', 200)->nullable();
             $table->string('status', 1)->default('C')->comment('C 購物車、N 沒付款、Y 己付款、X 取消訂單');
+            $table->string('process', 1)->default('N')->comment('N 待處理、I 處理中、D 已出貨');
             $table->timestamps();
         });
     }

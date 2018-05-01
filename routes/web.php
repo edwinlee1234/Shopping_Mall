@@ -81,6 +81,8 @@ Route::group(['prefix' => 'order'], function(){
     Route::group(['prefix' => 'admin', 'middleware' => ['user.auth.admin']], function(){
         Route::get('/mange', 'Order\OrderController@orderAdminMangePage');
         Route::post('/search', 'Order\OrderController@orderSearch');
+        Route::get('/edit/{order_id}', 'Order\OrderController@orderEditPage');
+        Route::put('/edit/{order_id}', 'Order\OrderController@orderEditProcess');
     });
 });
 
@@ -99,8 +101,7 @@ Route::group(['prefix' => 'cart', 'middleware' => ['user.auth']], function(){
         Route::post('/add', 'Order\OrderController@addItem');
         //delete
         Route::put('/del', 'Order\OrderController@delItem');
+        //change buy num
         Route::put('/changeBuyCount', 'Order\OrderController@changeBuyCount');
-        Route::put('/checkout', 'Order\OrderController@checkout');
     });
-
 });

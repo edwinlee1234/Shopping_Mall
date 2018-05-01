@@ -86,8 +86,10 @@ class User implements UserInterface
         session()->put('user_info', array(
             'id' => $user->id, 
             'name' => $user->name,
-            'cart_num' => $orderClass->countCartItem(null, $user->id),
         ));
+        session()->put('cart_num',
+            $orderClass->countCartItem(null, $user->id)
+        );
 
         return true;
     }
