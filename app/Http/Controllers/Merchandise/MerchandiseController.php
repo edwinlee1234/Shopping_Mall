@@ -75,6 +75,7 @@ class MerchandiseController extends Controller
             'intro_tw' => 'required|max:1200',
             'intro_cn' => 'required|max:1200',
             'intro_en' => 'required|max:1200',
+            'firstPhoto' => 'required|integer|in:1,2,3,4,5',
         ];
 
         $validator = Validator::make($inputs, $rules);
@@ -82,45 +83,44 @@ class MerchandiseController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
-        
-        //TODO 圖片的Update這邊要補回來
-        // $photos = array(
-        //     "photos1",
-        //     "photos2",
-        //     "photos3",
-        //     "photos4",
-        //     "photos5",
-        // );
-
-        // $rules = ['photos' => 'file|image|max:10240'];
-        // foreach ($photos as $photo) {
-        //     if (isset($inputs[$photo])) {
-        //         $validator = Validator::make(array("photos" => $inputs[$photo]), $rules);
-            
-        //         if ($validator->fails()) {
-        //             return redirect()->back()->withErrors($validator->errors())->withInput();
-        //         } 
-                
-        //         $inputs['photos'][] = &$inputs[$photo];
-        //     }
-        // }
 
         //valid for degrees
         if (isset($inputs['degreesOption']) && !empty($inputs['degreesOption'])) {
             $degreesOption = explode(',', $inputs['degreesOption']);
-            
+
             foreach ($degreesOption as $value) {
                 if (!is_int(intval($value))) {
                     $error_message = array(
                         'degreesOption' => 'The degrees must be an integer.',
                     );
-                    
+
                     return redirect()->back()->withErrors($error_message)->withInput();
                 }
             }
-            
+
             $inputs['degreesOption'] = $degreesOption;
         }
+
+         $photos = array(
+             "photos1",
+             "photos2",
+             "photos3",
+             "photos4",
+             "photos5",
+         );
+
+         $rules = ['photos' => 'file|image|max:10240'];
+         foreach ($photos as $photo) {
+             if (isset($inputs[$photo])) {
+                 $validator = Validator::make(array("photos" => $inputs[$photo]), $rules);
+            
+                 if ($validator->fails()) {
+                     return redirect()->back()->withErrors($validator->errors())->withInput();
+                 }
+                 $num = substr($photo, -1);
+                 $inputs['photos'][$num] = &$inputs[$photo];
+             }
+         }
 
         Purifier::clean(Input::get('intro_tw'));
         Purifier::clean(Input::get('intro_cn'));
@@ -160,6 +160,23 @@ class MerchandiseController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
+
+        //valid for degrees
+        if (isset($inputs['degreesOption']) && !empty($inputs['degreesOption'])) {
+            $degreesOption = explode(',', $inputs['degreesOption']);
+
+            foreach ($degreesOption as $value) {
+                if (!is_int(intval($value))) {
+                    $error_message = array(
+                        'degreesOption' => 'The degrees must be an integer.',
+                    );
+
+                    return redirect()->back()->withErrors($error_message)->withInput();
+                }
+            }
+
+            $inputs['degreesOption'] = $degreesOption;
+        }
         
         $photos = array(
             "photos1",
@@ -182,21 +199,12 @@ class MerchandiseController extends Controller
             }
         }
 
-        //valid for degrees
-        if (isset($inputs['degreesOption']) && !empty($inputs['degreesOption'])) {
-            $degreesOption = explode(',', $inputs['degreesOption']);
-            
-            foreach ($degreesOption as $value) {
-                if (!is_int(intval($value))) {
-                    $error_message = array(
-                        'degreesOption' => 'The degrees must be an integer.',
-                    );
-                    
-                    return redirect()->back()->withErrors($error_message)->withInput();
-                }
-            }
-            
-            $inputs['degreesOption'] = $degreesOption;
+        if (!isset($inputs['photos']) || count($inputs['photos']) <= 0) {
+            $error_message = array(
+                'photos' => '最少一張照片',
+            );
+
+            return redirect()->back()->withErrors($error_message)->withInput();
         }
 
         Purifier::clean(Input::get('intro_tw'));
