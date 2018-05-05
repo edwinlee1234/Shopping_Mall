@@ -119,10 +119,6 @@
             <input type="hidden" name="degreesOption" :value="degreesOption">
             <input type="hidden" name="oldOption" value="{{ old('degreesOption') }}">
         </div>
-        <!--<div class="form-group">-->
-        <!--    <label for="photos">圖片</label>-->
-        <!--    {{ Form::file('image', ['name' => 'photos[]', 'multiple' => true, 'class' => 'form-control-file']) }}-->
-        <!--</div>-->
         <div class="form-group">
             <label for="photos1">圖片1</label>
             {{ Form::file('image', ['name' => 'photos1', 'multiple' => false, 'class' => 'form-control-file']) }}

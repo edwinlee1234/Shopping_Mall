@@ -15,6 +15,7 @@ use Validator;
 class OrderController extends Controller
 {
     private $res;
+    private $rowPerPage = 20;
 
     public function __construct()
     {
@@ -26,16 +27,59 @@ class OrderController extends Controller
     }
 
 
-    public function orderAdminMangePage()
+    public function orderAdminMangePage(Request $request)
+    {
+        $inputs = $request->all();
+        $id = "";
+        $status= 1;
+        $process = 1;
+        $orderBy = 'updated_at';
+
+        if (isset($inputs['id']) && preg_match("/^[0-9]+$/", $inputs['id'])) {
+            $id = $inputs['id'];
+        }
+
+        if (isset($inputs['status'])) {
+            $status = $inputs['status'];
+        }
+
+        if (isset($inputs['process'])) {
+            $process = $inputs['process'];
+        }
+
+        if (isset($inputs['orderBy'])) {
+            $orderBy = $inputs['orderBy'];
+        }
+
+        // 這個是做分頁用的參數
+        $linkOption = array(
+            'id' => $id,
+            'status' => $status,
+            'process' => $process,
+            'orderBy' => $orderBy,
+        );
+
+        $orderClass = Order::instance();
+        $datas = array(
+            'title' => 'Order mange',
+            'orderDatas' => $orderClass->searchOrder($id, $status, $process, $orderBy, $this->rowPerPage),
+            'linkOption' => $linkOption,
+        );
+
+        return view('Page/Admin/OrderMange')->with($datas);
+    }
+
+    public function orderUserMangePage()
     {
         $orderClass = Order::instance();
 
         $datas = array(
             'title' => 'Order mange',
-            'orderDatas' => $orderClass->getAllOrderNotIncludeCart(),
+            'orderDatas' => $orderClass->getOrderByUserId(session()->get('user_info')['id'], $this->rowPerPage - 5),
         );
 
-        return view('Page/Admin/OrderMange')->with($datas);
+
+        return view('Page/Customer/OrderMange')->with($datas);
     }
 
     public function checkoutPage()
@@ -126,9 +170,7 @@ class OrderController extends Controller
         $num = $orderClass->addItem($inputs['id'], $inputs['num'], $extra, session()->get('user_info')['id']);
 
         // change session cart num
-        $user_info = session()->get('user_info');
-        $user_info['cart_num'] = $num;
-        session()->put('user_info', $user_info);
+        session()->put('cart_num', $num);
 
         if (count($num) > 0) {
             $this->res['result'] = true;
@@ -159,11 +201,10 @@ class OrderController extends Controller
 
         $orderClass = Order::instance();
         $result = $orderClass->delItem($inputs['id']);
-        
+
         // change session cart num
-        $user_info = session()->get('user_info');
-        $user_info['cart_num']--;
-        session()->put('user_info', $user_info);
+        $cartNum = $orderClass->countCartItem(null, session()->get('user_info')['id']);
+        session()->put('cart_num', $cartNum);
 
         if ($result) {
             $this->res['result'] = true;
@@ -181,17 +222,17 @@ class OrderController extends Controller
             'buy_count' => 'min:0'
         ];
 
-        foreach ($inputs as $input) {
-            $validator = Validator::make($input, $rules);
 
-            if ($validator->fails()) {
-                $this->res['result'] = false;
-                $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
-                $this->res['data'] = $validator->errors();
+        $validator = Validator::make($inputs, $rules);
 
-                return $this->res;
-            }
+        if ($validator->fails()) {
+            $this->res['result'] = false;
+            $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
+            $this->res['data'] = $validator->errors();
+
+            return $this->res;
         }
+
 
         $orderClass = Order::instance();
         $merchandiseClass = Merchandise::instance();
@@ -230,43 +271,9 @@ class OrderController extends Controller
         }
 
         // reset cart num
-//        $userInfo = session()->has('user_info');
         session()->put('cart_num', 0);
 
         return redirect()->to('/');
-    }
-
-    public function orderSearch(Request $request)
-    {
-        $inputs = $request->all();
-
-        $rules = [
-            'status' => 'required|in:1,N,Y,X',
-//            'process' => 'required|in:1,N,I,D',
-        ];
-
-        $validator = Validator::make($inputs, $rules);
-
-        // check orderid int
-        if (!is_null($inputs['orderId']) && !preg_match("/^[0-9]*$/", $inputs['orderId'])) {
-            $error_message = array(
-                'orderId' => 'The orderId must be an integer.',
-            );
-            return redirect()->back()->withErrors($error_message)->withInput();
-        }
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors())->withInput();
-        }
-
-        $orderClass = Order::instance();
-
-        $datas = array(
-            'title' => 'Order mange',
-            'orderDatas' => $orderClass->searchOrder($inputs['orderId'], $inputs['status']),
-        );
-
-        return view('Page/Admin/OrderMange')->with($datas);
     }
 
     public function orderEditProcess(Request $request, $orderId)
@@ -289,7 +296,7 @@ class OrderController extends Controller
         }
 
         $orderClass = Order::instance();
-        $res = $orderClass->orderUpdate($inputs);
+        $res = $orderClass->orderUpdate($inputs, $orderId);
 
         if ($res === true) {
             $success_message = array(
@@ -297,6 +304,34 @@ class OrderController extends Controller
             );
 
             return redirect()->back()->with($success_message);
+        }
+    }
+
+    public function cancel(Request $request)
+    {
+        $inputs = $request->all();
+
+        $rules = [
+            'id' => 'required',
+        ];
+
+        $validator = Validator::make($inputs, $rules);
+
+        if ($validator->fails()) {
+            $this->res['result'] = false;
+            $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
+            $this->res['data'] = $validator->errors();
+
+            return $this->res;
+        }
+
+        $orderClass = Order::instance();
+        $result = $orderClass->cancelOrder($inputs['id']);
+
+        if ($result) {
+            $this->res['result'] = true;
+
+            return $this->res;
         }
     }
 }

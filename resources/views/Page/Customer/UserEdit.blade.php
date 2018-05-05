@@ -3,9 +3,10 @@
 @section('title', $title)
 
 @section('content')
-    <h1>order</h1>
+    <h1>UserEdit</h1>
+    <p></p>
 @endsection
 
 @section('script')
-@parent
+    @parent
 @endsection

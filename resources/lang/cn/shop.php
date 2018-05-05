@@ -12,5 +12,8 @@ return [
         'sign-out' => '登出',
         'sign-up' => '注册',
         'center' => '会员中心',
-    ]
+    ],
+    'lang' => [
+        'intro' => '更换语系',
+    ],
 ];

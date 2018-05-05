@@ -1,15 +1,4 @@
 <div id="logoBar">
-
-    <span class="set_language" data-language="tw">
-        中文
-    </span>
-    <span class="set_language" data-language="en">
-        English
-    </span>
-    <span class="set_language" data-language="cn">
-        简体中文
-    </span>
-
     <div class="row">
         <div class="col col-xl-9 logo">
             <h1><a href="/">Logo</a></h1>

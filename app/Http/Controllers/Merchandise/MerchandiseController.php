@@ -34,7 +34,7 @@ class MerchandiseController extends Controller
         return view('Page/Admin/MerchandiseSingle')->with($datas);
     } 
     
-    public function merchandiseManageListPage($merchandisesData = null)
+    public function merchandiseManageListPage($merchandisesData = null, $linkOption = null)
     {
         $listData =  Merchandise::instance()->getCataloguesListDatasSubGroup();
         
@@ -42,6 +42,7 @@ class MerchandiseController extends Controller
             'title' => 'MerchandiseMange',
             'listGroups' => $listData,
             'products' => $merchandisesData,
+            'linkOption' => $linkOption,
         );
         
         return view('Page/Admin/MerchandiseMange')->with($datas);
@@ -424,28 +425,42 @@ class MerchandiseController extends Controller
 
         return view('Page/Customer/MerchandiseSingle')->with($datas);
     }
-    
+
+    /**
+     * 搜尋商品
+     * @param Request $request
+     * @return $this
+     */
     public function search(Request $request) {
         $inputs = $request->all();
-        
-        $rules = [
-            'orderBy' => 'required',
-            'nameKey' => 'max:150',
-            'group' => 'integer',
-        ];
-        
-        $validator = Validator::make($inputs, $rules);
-        
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors());
-        }        
-        
-        $merchandiseClass = Merchandise::instance();
+        $name = "";
+        $orderBy= "remain_count";
+        $group = 1;
 
-        $datas = $merchandiseClass->search($inputs['nameKey'], $inputs['orderBy'], $inputs['group'], $this->rowPerPage);
+        if (isset($inputs['name'])) {
+            $name = $inputs['name'];
+        }
+
+        if (isset($inputs['group'])) {
+            $group = $inputs['group'];
+        }
+
+        if (isset($inputs['orderBy'])) {
+            $orderBy = $inputs['orderBy'];
+        }
+
+        // 這個是做分頁用的參數
+        $linkOption = array(
+            'name' => $name,
+            'group' => $group,
+            'orderBy' => $orderBy,
+        );
+
+        $merchandiseClass = Merchandise::instance();
+        $datas = $merchandiseClass->search($name, $orderBy, $group, $this->rowPerPage);
         $lang = new Lang();
         $datas = $lang->getLang($datas, 'tw');
-    
-        return $this->merchandiseManageListPage($datas);
+
+        return $this->merchandiseManageListPage($datas, $linkOption);
     }
 }

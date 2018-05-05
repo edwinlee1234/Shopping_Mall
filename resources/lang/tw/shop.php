@@ -13,4 +13,7 @@ return [
         'sign-up' => '註冊',
         'center' => '會員中心',
     ],
+    'lang' => [
+        'intro' => '更換語系',
+    ],
 ];

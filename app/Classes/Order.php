@@ -3,12 +3,12 @@ namespace App\Classes;
 
 use DB;
 use Exception;
-use App\Interfaces\OrderInterface;
+use App\Interfaces\OrderInterface as OrderI;
 use App\Model\Order as OrderModel;
 use App\Model\OrderDetail as OrderDetailModel;
 use App\Model\Merchandise as MerchandiseModel;
 
-class Order implements OrderInterface 
+class Order implements OrderI
 {
     private static $orderClass;
     
@@ -73,7 +73,7 @@ class Order implements OrderInterface
      */
     public function checkOrderByCart($userId)
     {
-        $order = OrderModel::where('user_id', '=', $userId)->where('status', '=', \App\Interfaces\OrderInterface::CART)->take(1)->get();
+        $order = OrderModel::where('user_id', '=', $userId)->where('status', '=', OrderI::CART)->take(1)->get();
 
         return $order;
     }
@@ -82,8 +82,8 @@ class Order implements OrderInterface
     public function countCartItem($orderId = null, $user_id = null)
     {
         if (!is_null($orderId)) {
-
-            return OrderDetailModel::where('order_id', '=', $orderId)->count();
+            return OrderDetailModel::where('order_id', '=', $orderId)
+                ->count();
         }
 
         if (!is_null($user_id)) {
@@ -95,6 +95,7 @@ class Order implements OrderInterface
             }
 
             $orderId = $order[0]['id'];
+
             return OrderDetailModel::where('order_id', '=', $orderId)->count();
         }
     }
@@ -117,6 +118,7 @@ class Order implements OrderInterface
 
     /**
      * 取得Cart的內容 (用order_id join merchandise and order_detail)
+     * CartPage & checkout會到用這func
      * @param $orderId
      * @return mixed
      */
@@ -211,13 +213,13 @@ class Order implements OrderInterface
             $orderData->address = $orderInput['address'];
             $orderData->pay_type = $orderInput['payment'];
             $orderData->phone = $orderInput['phoneNumber'];
-            $orderData->status = \App\Interfaces\OrderInterface::NOT_PAY;
+            $orderData->status = OrderI::NOT_PAY;
             $orderData->total_price  = $totalPrice;
             $orderData->save();
 
             return true;
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return false;
         }
     }
 
@@ -257,13 +259,26 @@ class Order implements OrderInterface
         return OrderModel::where('status', '!=', 'C')->get();
     }
 
-    public function searchOrder($orderId = null, $status)
+    public function searchOrder($orderId = "", $status, $process, $orderBy, $rowPerPage)
     {
-        if ($orderId !== null) {
-            return OrderModel::where('id', '=', $orderId)->get();
+        // TODO 重構這邊，多開一個搜尋用的物件
+        if ($orderId != "") {
+            return OrderModel::where('id', '=', $orderId)->orderBy($orderBy, 'desc')->paginate($rowPerPage);
         }
 
-        return OrderModel::where('status', '=', $status)->get();
+        if ($status != 1 && $process != 1) {
+            return OrderModel::where('status', '=', $status)->where('process', '=', $process)->orderBy($orderBy, 'desc')->paginate($rowPerPage);
+        }
+
+        if ($status != 1) {
+            return OrderModel::where('status', '=', $status)->orderBy($orderBy, 'desc')->paginate($rowPerPage);
+        }
+
+        if ($process != 1) {
+            return OrderModel::where('process', '=', $process)->where('status', '!=', 'C')->orderBy($orderBy, 'desc')->paginate($rowPerPage);
+        }
+
+        return OrderModel::where('status', '!=', 'C')->orderBy($orderBy, 'desc')->paginate($rowPerPage);
     }
 
     public function getOrderById($orderId)
@@ -271,9 +286,46 @@ class Order implements OrderInterface
         return OrderModel::find($orderId);
     }
 
-    public function orderUpdate(array $input)
+    public function getOrderByUserId($userId, $rowPerPage)
     {
+        return OrderModel::where('user_id', '=', $userId)->where('status', '!=', 'C')->orderBy('updated_at', 'desc')->paginate($rowPerPage);
+    }
 
+    /**
+     * Admin更新訂單
+     * @param array $input
+     * @param $orderId
+     * @return bool|string
+     */
+    public function orderUpdate(array $input, $orderId)
+    {
+        try {
+            $order = OrderModel::find($orderId);
+            $order->name = $input['name'];
+            $order->phone = $input['phoneNumber'];
+            $order->pay_type = $input['payment'];
+            $order->status = $input['status'];
+            $order->process = $input['process'];
+            $order->address = $input['address'];
+            $order->save();
+
+            return true;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function cancelOrder($orderId)
+    {
+        try {
+            $order = OrderModel::find($orderId);
+            $order->status = 'X';
+            $order->save();
+
+            return true;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function getId()

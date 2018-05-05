@@ -127,4 +127,13 @@ class UserController extends Controller
             return redirect('/');
         }
     }
+
+    public function userEditPage()
+    {
+        $datas = array(
+            'title' => 'User Edit'
+        );
+
+        return view('Page/Customer/UserEdit')->with($datas);
+    }
 }

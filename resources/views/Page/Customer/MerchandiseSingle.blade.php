@@ -52,20 +52,26 @@
                         <label for="number">Number:</label>
                         <br>
                         <select name="number" class="custom-select custom-select-md">
-                            @if ($product->remain_count > 20)
-                                @for ($i = 1; $i <= 20; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
+                            @if ($product->remain_count > 0)
+                                @if ($product->remain_count > 20)
+                                    @for ($i = 1; $i <= 20; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                @else
+                                    @for ($i = 1; $i <= $product->remain_count; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                @endif
                             @else
-                                @for ($i = 1; $i <= $product->remain_count; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
+                                <option>沒有存貨</option>
                             @endif
                         </select>
                     </div>
-
-                    <button id="addCartBtn" @click="addCart({{ $product->id }})" type="button" class="btn btn-primary">Add to Cart!</button>
-
+                    @if ($product->remain_count > 0)
+                        <button id="addCartBtn" @click="addCart({{ $product->id }})" type="button" class="btn btn-primary">Add to Cart!</button>
+                    @else
+                        <button id="addCartBtn" disabled type="button" class="btn btn-primary">Add to Cart!</button>
+                    @endif
                     <p>info</p>
                     <div class="info">
                         {!! $product->introduction !!}

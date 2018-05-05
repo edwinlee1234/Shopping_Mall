@@ -48,27 +48,35 @@
                 </div>
                 <div class="col selectOption">
                     <select class="cart_select_buy_count_{{ $order->order_detail_id }} custom-select custom-select-md" @change="changeNum({{ $order->order_detail_id }})">
-                        @if ($order->remain_count > 20)
-                            @for ($i = 1; $i <= 20; $i++)
-                                @if ($i == $order->buy_count)
-                                    <option value="{{ $i }}" selected>{{ $i }}</option>
-                                @else
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endif
-                            @endfor
+                        @if ($order->remain_count > 0)
+                            @if ($order->remain_count > 20)
+                                @for ($i = 1; $i <= 20; $i++)
+                                    @if ($i == $order->buy_count)
+                                        <option value="{{ $i }}" selected>{{ $i }}</option>
+                                    @else
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endif
+                                @endfor
+                            @else
+                                @for ($i = 1; $i <= $order->remain_count; $i++)
+                                    @if ($i == $order->buy_count)
+                                        <option value="{{ $i }}" selected>{{ $i }}</option>
+                                    @else
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endif
+                                @endfor
+                            @endif
                         @else
-                            @for ($i = 1; $i <= $order->remain_count; $i++)
-                                @if ($i == $order->buy_count)
-                                    <option value="{{ $i }}" selected>{{ $i }}</option>
-                                @else
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endif
-                            @endfor
+                            <option></option>
                         @endif
                     </select>
                 </div>
                 <div class="col text">
-                    <p>{{ $order->remain_count }}</p>
+                    @if ($order->remain_count > 0)
+                        <p>{{ $order->remain_count }}</p>
+                    @else
+                        <p>{{ trans('shop.order.out-of-stock') }}</p>
+                    @endif
                 </div>
                 <div class="col text">
                     <p>{{ $order->price }}</p>

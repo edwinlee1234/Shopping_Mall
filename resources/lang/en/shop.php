@@ -24,5 +24,9 @@ return [
         'update' => 'Update',
         'degrees' => 'Degrees',
         'remain' => 'Remain',
+        'out-of-stock'=> 'Out of stock',
+    ],
+    'lang' => [
+        'intro' => 'Change Language',
     ],
 ];

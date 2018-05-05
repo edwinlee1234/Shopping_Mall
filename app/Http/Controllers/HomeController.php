@@ -41,5 +41,14 @@ class HomeController extends Controller
 
         return view('Page/Customer/Contact')->with($datas);        
     }
+
+    public function centerPage()
+    {
+        $datas = array(
+            'title' => 'Center'
+        );
+
+        return view('Page/Customer/Center')->with($datas);
+    }
 }
 

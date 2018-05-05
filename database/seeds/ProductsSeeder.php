@@ -14,9 +14,9 @@ class ProductsSeeder extends Seeder
     {
         for ($i = 0; $i < 300; $i++) {
             $intro = array(
-                "intro_tw" => "<p>介紹 (繁中)$i</p>>",
-                "intro_cn" => "<p>介紹 (簡中)$i</p>>",
-                "intro_en" => "<p>介紹 (英文)$i</p>>",
+                "intro_tw" => "<p>介紹 (繁中)$i</p>",
+                "intro_cn" => "<p>介紹 (簡中)$i</p>",
+                "intro_en" => "<p>intro en$i</p>",
             );
 
             $extra = array(
@@ -32,11 +32,11 @@ class ProductsSeeder extends Seeder
             $merchandiseData = array(
                 "name_tw" => "商品名稱 (繁中)$i",
                 "name_cn" => "商品名稱 (簡中)$i",
-                "name_en" => "商品名稱 (英文)$i",
+                "name_en" => "product $i",
                 "introduction" => json_encode($intro),
                 "brand" => "brand-$i",
                 "type" => rand(2, 4),
-                "price" => rand(100, 30000),
+                "price" => rand(100, 9999),
                 "extra_info" => json_encode($extra),
                 "remain_count" => rand(0, 30),
                 "status" => "S",

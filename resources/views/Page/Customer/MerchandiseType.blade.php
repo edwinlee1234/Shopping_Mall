@@ -48,9 +48,7 @@
             @endfor
         </div>
         <div class="row justify-content-xl-center">
-            <div class="col col-xl-2 pageLink">
-                {{ $products->links() }}
-            </div>
+            {{ $products->links() }}
         </div>
     </div>
 @endsection

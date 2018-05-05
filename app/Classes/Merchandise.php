@@ -189,6 +189,7 @@ class Merchandise implements MerchandiseInterface
         
         return $datas;
     }
+
     public function getCataloguesListDatasSubGroup()
     {
         $data = [];
@@ -242,7 +243,7 @@ class Merchandise implements MerchandiseInterface
         return $data->remain_count;
     }
     
-    public function search($name, $orderBy, $listGroup, $rowPerPage) 
+    public function search($name, $orderBy, $listGroup, $rowPerPage)
     {
         // TODO 這邊先寫這邊, 有時間再換一個比較彈性好擴充的寫法, 多做一個Class也是可以
         if (!empty($name)) {

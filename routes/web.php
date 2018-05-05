@@ -6,6 +6,8 @@ Route::get('/', 'HomeController@index');
 Route::get('/infos', 'HomeController@infoPage');
 //Contact
 Route::get('/contact', 'HomeController@contactPage');
+//Center
+Route::get('/center', 'HomeController@centerPage')->middleware(['user.auth']);
 
 //Admin
 Route::group(['prefix' => 'admin'], function(){
@@ -16,6 +18,11 @@ Route::group(['prefix' => 'admin'], function(){
 
 //User
 Route::group(['prefix' => 'user'], function(){
+    Route::group(['middleware' => ['user.auth']], function() {
+        // 修改會員資料
+        Route::get('/edit', 'User\UserController@userEditPage');
+    });
+
     Route::group(['prefix' => 'auth'], function(){
         Route::get('/sign-up', 'User\UserController@signUpPage');
         Route::post('/sign-up', 'User\UserController@signUpProcess');
@@ -31,7 +38,7 @@ Route::group(['prefix' => 'merchandise'], function(){
     //使用者的產品清單
     Route::get('/merchandiseType/{merchandiseType_id}', 'Merchandise\MerchandiseController@merchandiseTypeListPage');
     //搜查商品
-    Route::post('search', 'Merchandise\MerchandiseController@search');
+    Route::get('/search', 'Merchandise\MerchandiseController@search');
     
     Route::group(['middleware' => ['user.auth.admin']], function() {
         //取得新增產品頁
@@ -78,9 +85,22 @@ Route::group(['prefix' => 'merchandise'], function(){
 
 
 Route::group(['prefix' => 'order'], function(){
+
+    Route::group(['middleware' => ['user.auth']], function(){
+        // 會員的訂單整詢
+        //Route::get('/search', 'Order\OrderController@orderSearchByUser');
+        Route::get('/mange', 'Order\OrderController@orderUserMangePage');
+
+        // User Order api
+        Route::group(['prefix' => 'api'], function(){
+            Route::put('/cancel', 'Order\OrderController@cancel');
+        });
+    });
+
+
+
     Route::group(['prefix' => 'admin', 'middleware' => ['user.auth.admin']], function(){
         Route::get('/mange', 'Order\OrderController@orderAdminMangePage');
-        Route::post('/search', 'Order\OrderController@orderSearch');
         Route::get('/edit/{order_id}', 'Order\OrderController@orderEditPage');
         Route::put('/edit/{order_id}', 'Order\OrderController@orderEditProcess');
     });
