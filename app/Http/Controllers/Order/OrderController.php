@@ -222,17 +222,17 @@ class OrderController extends Controller
             'buy_count' => 'min:0'
         ];
 
+        foreach($inputs as $input) {
+            $validator = Validator::make($input, $rules);
 
-        $validator = Validator::make($inputs, $rules);
+            if ($validator->fails()) {
+                $this->res['result'] = false;
+                $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
+                $this->res['data'] = $validator->errors();
 
-        if ($validator->fails()) {
-            $this->res['result'] = false;
-            $this->res['errorCode'] = IError::DATA_FORMAT_ERROR;
-            $this->res['data'] = $validator->errors();
-
-            return $this->res;
+                return $this->res;
+            }
         }
-
 
         $orderClass = Order::instance();
         $merchandiseClass = Merchandise::instance();

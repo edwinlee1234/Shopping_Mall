@@ -24,6 +24,13 @@
             padding-top: 35px;
         }
 
+        #MerchandiseSingleForm .imgBox img{
+            margin-top: 10px;
+            margin-bottom: 15px;
+            width: 230px;
+            height: 280px;
+        }
+
     </style>
 @endsection
 
@@ -162,47 +169,82 @@
         </div>
 
         <div class="form-row">
-            <div class="form-group col-xl-4">
-            @if (isset($products->photos[0]))
-                <img src="{{url($products->photos[0])}}" alt="">
-            @else
-                <img src="" alt="">
-            @endif
-            {{ Form::file('image', ['name' => 'photos1', 'multiple' => false, 'class' => 'form-control-file']) }}
+            <div class="form-group col-xl-4 imgBox">
+                @if (isset($products->photos[0]))
+                    <img src="{{url($products->photos[0])}}" alt="">
+                @else
+                    <img src="" alt="">
+                @endif
+                <div class="row">
+                    <div class="col col-xl-2">
+                        <p>1.</p>
+                    </div>
+                    <div class="col col-xl-10">
+                        {{ Form::file('image', ['name' => 'photos1', 'multiple' => false, 'class' => 'form-control-file']) }}
+                    </div>
+                </div>
             </div>
-            <div class="form-group col-xl-4">
+            <div class="form-group col-xl-4 imgBox">
                 @if (isset($products->photos[1]))
                     <img src="{{url($products->photos[1])}}" alt="">
                 @else
                     <img src="" alt="">
                 @endif
-                {{ Form::file('image', ['name' => 'photos2', 'multiple' => false, 'class' => 'form-control-file']) }}
+                <div class="row">
+                    <div class="col col-xl-2">
+                        <p>2.</p>
+                    </div>
+                    <div class="col col-xl-10">
+                        {{ Form::file('image', ['name' => 'photos2', 'multiple' => false, 'class' => 'form-control-file']) }}
+                    </div>
+                </div>
             </div>
-            <div class="form-group col-xl-4">
+            <div class="form-group col-xl-4 imgBox">
                 @if (isset($products->photos[2]))
                     <img src="{{url($products->photos[2])}}" alt="">
                 @else
                     <img src="" alt="">
                 @endif
-                {{ Form::file('image', ['name' => 'photos3', 'multiple' => false, 'class' => 'form-control-file']) }}
+                <div class="row">
+                    <div class="col col-xl-2">
+                        <p>3.</p>
+                    </div>
+                    <div class="col col-xl-10">
+                        {{ Form::file('image', ['name' => 'photos3', 'multiple' => false, 'class' => 'form-control-file']) }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-xl-4">
+            <div class="form-group col-xl-4 imgBox">
                 @if (isset($products->photos[3]))
                     <img src="{{url($products->photos[3])}}" alt="">
                 @else
                     <img src="" alt="">
                 @endif
-                {{ Form::file('image', ['name' => 'photos4', 'multiple' => false, 'class' => 'form-control-file']) }}
+                <div class="row">
+                    <div class="col col-xl-2">
+                        <p>4.</p>
+                    </div>
+                    <div class="col col-xl-10">
+                        {{ Form::file('image', ['name' => 'photos4', 'multiple' => false, 'class' => 'form-control-file']) }}
+                    </div>
+                </div>
             </div>
-            <div class="form-group col-xl-4">
+            <div class="form-group col-xl-4 imgBox">
                 @if (isset($products->photos[4]))
                     <img src="{{url($products->photos[4])}}" alt="">
                 @else
                     <img src="" alt="">
                 @endif
-                {{ Form::file('image', ['name' => 'photos5', 'multiple' => false, 'class' => 'form-control-file']) }}
+                <div class="row">
+                    <div class="col col-xl-2">
+                        <p>5.</p>
+                    </div>
+                    <div class="col col-xl-10">
+                        {{ Form::file('image', ['name' => 'photos5', 'multiple' => false, 'class' => 'form-control-file']) }}
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -255,6 +297,14 @@
         const MerchandiseSingleForm = new Vue({
             el: '#MerchandiseSingleForm',
 
+            data: {
+                showDegree: true,
+
+                degreesOption: [],
+
+                cataloguesGroup: [],
+            },
+
             mounted() {
                 let self = this;
                 let oldOptionVal = $('input[name=oldOption]').val();
@@ -280,14 +330,6 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-            },
-
-            data: {
-                showDegree: true,
-
-                degreesOption: [],
-
-                cataloguesGroup: [],
             },
 
             methods: {
