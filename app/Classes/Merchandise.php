@@ -97,22 +97,27 @@ class Merchandise implements MerchandiseInterface
             'intro_cn' => $merchandiseDatas['intro_cn'],
             'intro_en' => $merchandiseDatas['intro_en'],
         ), JSON_UNESCAPED_UNICODE);
-        
-        //TODO 圖片的Update這邊要補回來
-        
-        // $pathArray = [];
-        // if (isset($merchandiseDatas['photos'])) {
-        //     foreach ($merchandiseDatas['photos'] as $photo) {
-        //         $file_name = $photo->getClientOriginalName();
-        //         $file_relative_path = 'images/merchandise/' . $file_name;
-        //         $file_path = public_path($file_relative_path);
-        //         $image = Image::make($photo)->save($file_path);
-        //         $pathArray[] = $file_relative_path;                
-        //     }
-        // }
-        
-        // $merchandiseDatas['photos'] = json_encode($pathArray);
- 
+
+
+        //檢查使用者更新了那一張照片
+        $oldPhotos = json_decode(MerchandiseModel::find($id)['photos']);
+        if (isset($merchandiseDatas['photos'])) {
+            foreach ($merchandiseDatas['photos'] as $key => $photo) {
+                $file_name = $photo->getClientOriginalName();
+                $file_relative_path = 'images/merchandise/' . $file_name;
+                $file_path = public_path($file_relative_path);
+                $image = Image::make($photo)->save($file_path);
+                $oldPhotos[($key - 1)] = $file_relative_path;
+            }
+        }
+
+        //處理優先放第一張的照片
+        $temp = $oldPhotos[0];
+        $oldPhotos[0] = $oldPhotos[$merchandiseDatas['firstPhoto'] - 1];
+        $oldPhotos[$merchandiseDatas['firstPhoto'] - 1] = $temp;
+
+        $merchandiseDatas['photos'] = json_encode($oldPhotos);
+
         MerchandiseModel::find($id)->update($merchandiseDatas);
         
         return true;        
