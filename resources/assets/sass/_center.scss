@@ -1,0 +1,19 @@
+#Center {
+
+  %box {
+    //border: solid 1px;
+    border-radius: 5px;
+    padding: 30px 0px 30px 0px;
+    box-shadow: 3px 3px 5px $gray-dark;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .userBox {
+    @extend %box
+  }
+
+  .orderBox {
+    @extend %box
+  }
+}
