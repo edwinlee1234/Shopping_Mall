@@ -29,6 +29,7 @@ class UserController extends Controller
             'password' => 'required|same:passwordConfirm|min:6',
             'passwordConfirm' => 'required|min:6',
             'address' => 'required',
+            'phone' => 'required',
         ];
         
         $validator = Validator::make($inputs, $rules);

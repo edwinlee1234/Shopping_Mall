@@ -15,5 +15,6 @@ class User extends Model
         "email",
         "password",
         "address",
+        "phone",
     ];
 }
