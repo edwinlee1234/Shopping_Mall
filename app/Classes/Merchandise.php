@@ -112,9 +112,11 @@ class Merchandise implements MerchandiseInterface
         }
 
         //處理優先放第一張的照片
-        $temp = $oldPhotos[0];
-        $oldPhotos[0] = $oldPhotos[$merchandiseDatas['firstPhoto'] - 1];
-        $oldPhotos[$merchandiseDatas['firstPhoto'] - 1] = $temp;
+        if (isset($oldPhotos[$merchandiseDatas['firstPhoto'] - 1])) {
+            $temp = $oldPhotos[0];
+            $oldPhotos[0] = $oldPhotos[$merchandiseDatas['firstPhoto'] - 1];
+            $oldPhotos[$merchandiseDatas['firstPhoto'] - 1] = $temp;   
+        }
 
         $merchandiseDatas['photos'] = json_encode($oldPhotos);
 
