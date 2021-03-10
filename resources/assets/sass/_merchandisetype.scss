@@ -1,6 +1,11 @@
 #merchandiseType {
+  .col {
+    height: 25px;
+  }
+
   .breadcrumb {
     @extend %breadcrumbCommon;
+    //padding-bottom: 10px;
   }
 
   .card {
@@ -18,11 +23,21 @@
   }
 
   .card-body {
-    height: 50px;
+    height: 70px;
     padding: 15px
   }
 
   .pageLink {
     margin: 20px 0px 20px 0px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #merchandiseType {
+    font-size: 15px;
+  }
+
+  #merchandiseType .card-img-size{
+    height: 200px;
   }
 }

@@ -114,14 +114,4 @@ Route::group(['prefix' => 'cart', 'middleware' => ['user.auth']], function(){
     Route::get('/checkout', 'Order\OrderController@checkoutPage');
     //checkout post
     Route::post('/checkoutProcess', 'Order\OrderController@checkoutProcess');
-
-    //API
-    Route::group(['prefix' => 'api'], function(){
-        //新增購物車物品
-        Route::post('/add', 'Order\OrderController@addItem');
-        //delete
-        Route::put('/del', 'Order\OrderController@delItem');
-        //change buy num
-        Route::put('/changeBuyCount', 'Order\OrderController@changeBuyCount');
-    });
 });

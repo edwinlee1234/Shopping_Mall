@@ -1,6 +1,6 @@
 <div id="logoBar">
     <div class="row">
-        <div class="col col-xl-9 logo">
+        <div class="col-5 col-xl-9 logo">
             <h1><a href="/">Logo</a></h1>
         </div>
         <div class="col functionList">

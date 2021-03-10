@@ -115,7 +115,7 @@
                     'degrees': $('select[name=degrees]').val(),
                 };
 
-                axios.post('/cart/api/add', data)
+                axios.post('/api/cart/add', data)
                     .then(function (response) {
                         if (response.data.result !== true) {
                             console.log(response.data.errorCode);

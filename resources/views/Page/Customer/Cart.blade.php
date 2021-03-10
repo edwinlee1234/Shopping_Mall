@@ -132,7 +132,7 @@
                     'id': id,
                 };
 
-                axios.put('/cart/api/del' , datas)
+                axios.put('api/cart/del' , datas)
                     .then(function (response) {
                         if (response.data.result !== true) {
                             console.log(response.data.errorCode);
@@ -159,7 +159,7 @@
                     });
                 }
 
-                axios.put('/cart/api/changeBuyCount' , datas)
+                axios.put('api/cart/changeBuyCount' , datas)
                     .then(function (response) {
                         if (response.data.result !== true) {
                             console.log(response.data.errorCode);

@@ -21,10 +21,11 @@
                 </nav>
             </div>
         </div>
+        <br>
         <div class="row">
             @for($i = 0; $i < count($products); $i++)
 
-                <div class="col col-xl-3">
+                <div class="col-6 col-xl-3">
                     <div class="productsList">
                         <div class="card">
                             <a href="/merchandise/ {{$products[$i]->id}}">
@@ -33,10 +34,12 @@
 
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col col-xl-8">
+                                    <div class="col">
                                         <p>{{ $products[$i]->name }}</p>
                                     </div>
-                                    <div class="col col-xl-4">
+                                </div>
+                                <div class="row">
+                                    <div class="col">
                                         <p> $ {{ $products[$i]->price }} </p>
                                     </div>
                                 </div>

@@ -47,13 +47,13 @@
         </div>
         <div class="showcase-img">
             <div class="row">
-                <div class="col">
+                <div class="col-12 col-xl-4">
                     <img class="ser1-img" src="https://placeimg.com/1080/500/nature" alt="">
                 </div>
-                <div class="col">
+                <div class="col-12 col-xl-4">
                     <img class="ser1-img" src="https://placeimg.com/1080/500/nature" alt="">
                 </div>
-                <div class="col">
+                <div class="col-12 col-xl-4">
                     <img class="ser1-img" src="https://placeimg.com/1080/500/nature" alt="">
                 </div>
             </div>

@@ -41,7 +41,7 @@ class User implements UserInterface
         $user = UserModel::where('email', $logInDatas['email'])
         ->where('type', 'A')->first();
         
-        if (count($user) <= 0) {
+        if (empty($user)) {
             $errorMessage['email'] = 'Email address does not exist';
             
             return $errorMessage;
